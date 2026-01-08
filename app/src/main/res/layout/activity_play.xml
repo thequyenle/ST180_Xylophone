@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_play">
+
+    <ImageView
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/ic_home"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/img2"
+        app:layout_constraintBottom_toBottomOf="@id/img2"/>
+
+    <ImageView
+        android:id="@+id/img1"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/xylophone_selected"
+        app:layout_constraintBottom_toBottomOf="@id/img2"
+        app:layout_constraintEnd_toStartOf="@id/img2"
+        app:layout_constraintTop_toTopOf="@id/img2" />
+
+    <ImageView
+        android:id="@+id/img2"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/piano_selected"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img3"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/guitar_selected"
+        app:layout_constraintBottom_toBottomOf="@id/img2"
+        app:layout_constraintStart_toEndOf="@id/img2"
+        app:layout_constraintTop_toTopOf="@id/img1" />
+
+    <ImageView
+        android:id="@+id/frameMusic"
+        android:layout_width="match_parent"
+        android:layout_height="272dp"
+        android:src="@drawable/frame_behind"
+        app:layout_constraintTop_toBottomOf="@id/img2"/>
+
+    <ImageView
+        android:id="@+id/btnDo"
+        android:layout_width="0dp"
+        android:layout_height="232dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/btnDo"
+        app:layout_constraintStart_toStartOf="@id/frameMusic"
+        app:layout_constraintEnd_toStartOf="@id/btnRe"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        />
+    <ImageView
+        android:id="@+id/btnRe"
+        android:layout_width="0dp"
+        android:layout_height="232dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/btnRe"
+        app:layout_constraintStart_toEndOf="@id/btnDo"
+        app:layout_constraintEnd_toStartOf="@id/btnMi"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"
+        />
+    <ImageView
+        android:id="@+id/btnMi"
+        android:layout_width="0dp"
+        android:layout_height="232dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/btnMi"
+        app:layout_constraintStart_toEndOf="@id/btnRe"
+        app:layout_constraintEnd_toStartOf="@id/btnFa"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"
+        />
+
+
+    <ImageView
+        android:id="@+id/btnFa"
+        android:layout_width="0dp"
+        android:layout_height="232dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/btnFa"
+        app:layout_constraintStart_toEndOf="@id/btnMi"
+        app:layout_constraintEnd_toStartOf="@id/btnSol"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"
+        />
+    <ImageView
+        android:id="@+id/btnSol"
+        android:layout_width="0dp"
+        android:layout_height="232dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/btnSol"
+        app:layout_constraintStart_toEndOf="@id/btnFa"
+        app:layout_constraintEnd_toStartOf="@id/btnLa"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"
+        />
+    <ImageView
+        android:id="@+id/btnLa"
+        android:layout_width="0dp"
+        android:layout_height="232dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/btnLa"
+        app:layout_constraintStart_toEndOf="@id/btnSol"
+        app:layout_constraintEnd_toStartOf="@id/btnSi"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"
+        />
+    <ImageView
+        android:id="@+id/btnSi"
+        android:layout_width="0dp"
+        android:layout_height="232dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/btnSi"
+        app:layout_constraintStart_toEndOf="@id/btnLa"
+        app:layout_constraintEnd_toStartOf="@id/btnDo2"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"
+        />
+    <ImageView
+        android:id="@+id/btnDo2"
+        android:layout_width="0dp"
+        android:layout_height="232dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="40dp"
+        android:src="@drawable/btnDo2"
+        app:layout_constraintStart_toEndOf="@id/btnSi"
+        app:layout_constraintEnd_toEndOf="@id/frameMusic"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true"
+    android:fillEnabled="true">
+    <!-- Fade in + Scale up -->
+    <alpha
+        android:duration="300"
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:fillAfter="true" />
+
+    <scale
+        android:duration="300"
+        android:fromXScale="0.0"
+        android:fromYScale="0.0"
+        android:toXScale="1.0"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fillAfter="true" />
+
+    <!-- Bounce (overshoot) -->
+    <scale
+        android:duration="200"
+        android:fromXScale="1.0"
+        android:fromYScale="1.0"
+        android:toXScale="1.2"
+        android:toYScale="1.2"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="300"
+        android:interpolator="@android:anim/overshoot_interpolator" />
+
+    <scale
+        android:duration="200"
+        android:fromXScale="1.2"
+        android:fromYScale="1.2"
+        android:toXScale="1.0"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="500" />
+
+    <!-- Shake (rotate left-right) -->
+    <rotate
+        android:duration="100"
+        android:fromDegrees="0"
+        android:toDegrees="-15"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="700" />
+
+    <rotate
+        android:duration="100"
+        android:fromDegrees="-15"
+        android:toDegrees="15"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="800" />
+
+    <rotate
+        android:duration="100"
+        android:fromDegrees="15"
+        android:toDegrees="-10"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="900" />
+
+    <rotate
+        android:duration="100"
+        android:fromDegrees="-10"
+        android:toDegrees="10"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="1000" />
+
+    <rotate
+        android:duration="100"
+        android:fromDegrees="10"
+        android:toDegrees="0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="1100" />
+</set>

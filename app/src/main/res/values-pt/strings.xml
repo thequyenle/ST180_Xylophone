@@ -1,0 +1,117 @@
+<resources>
+    <string name="app_name">Nickname Generator: Name Maker</string>
+    <string name="go_to_setting_message">O aplicativo precisa desta permissão</string>
+    <string name="settings">Configurações</string>
+    <string name="this_action_can_contain_ads">Esta ação pode conter publicidade</string>
+    <string name="not_select_lang">Por favor, selecione um idioma</string>
+    <string name="next">Próximo</string>
+    <string name="language">Idioma</string>
+
+    <string name="title_1">Gerador de Apelidos</string>
+    <string name="title_2">Decore seu nome</string>
+    <string name="title_3">Variedade de temas para nomes</string>
+    <string name="permission">Permissão</string>
+    <string name="storage">Armazenamento</string>
+    <string name="continue_per">Continuar</string>
+    <string name="notification">Notificação</string>
+    <string name="granted_notification">Permissão de notificação concedida</string>
+    <string name="granted_storage">Permissão de armazenamento concedida</string>
+    <string name="allow">Permitir</string>
+    <string name="to_access">para acessar fotos no seu dispositivo</string>
+    <string name="to_access_13">para acessar notificações no seu dispositivo</string>
+
+    <string name="rate_us">Avalie-nos</string>
+    <string name="share_app">Compartilhar App</string>
+    <string name="privacy_policy"><![CDATA[Privacidade & Política]]></string>
+
+    <string name="zero_star_title">Você gosta do aplicativo?</string>
+    <string name="zero_star">Conte-nos sua experiência</string>
+
+    <string name="one_star_title">Oh, não!</string>
+    <string name="one_star">Por favor, dê-nos um feedback</string>
+
+    <string name="two_star_title">Oh, não!</string>
+    <string name="two_star">Por favor, dê-nos um feedback</string>
+
+    <string name="three_star_title">Oh, não!</string>
+    <string name="three_star">Por favor, dê-nos um feedback</string>
+
+    <string name="four_star_title">Nós também te amamos!</string>
+    <string name="four_star">Obrigado pelo seu feedback</string>
+
+    <string name="five_star_title">Nós também te amamos!</string>
+    <string name="five_star">Obrigado pelo seu feedback</string>
+
+    <string name="rate_us_0">Você ainda não avaliou!</string>
+    <string name="rate">Avaliar</string>
+    <string name="exit">Sair</string>
+    <string name="have_rated">Obrigado por avaliar nosso aplicativo</string>
+    <string name="share">Compartilhar</string>
+    <string name="delete">Excluir</string>
+    <string name="download">Baixar</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="wait_a_minute">Aguarde alguns segundos...</string>
+    <string name="reset">Redefinir</string>
+    <string name="download_success">Download bem-sucedido para o álbum Character Maker</string>
+    <string name="please_check_your_internet">Por favor, verifique sua internet</string>
+    <string name="please_select_an_image">Por favor, selecione uma imagem</string>
+    <string name="error">Erro</string>
+    <string name="an_error_occurred">Ocorreu um erro, por favor tente novamente mais tarde.</string>
+    <string name="image_has_been_saved_successfully">Imagem foi salva com sucesso!</string>
+    <string name="save">Salvar</string>
+    <string name="are_you_sure_want_to_delete_this_item">Tem certeza de que deseja excluir este item?</string>
+    <string name="downloading">Baixando...</string>
+    <string name="successfully">Com sucesso</string>
+    <string name="download_failed_please_try_again_later">Download falhou, por favor tente novamente mais tarde!</string>
+    <string name="save_failed_please_try_again">Falha ao salvar, por favor tente novamente!</string>
+    <string name="delete_failed_please_try_again">Falha ao excluir, por favor tente novamente!</string>
+    <string name="my_creation">Minha Criação</string>
+    <string name="delete_your_customize">Excluir sua personalização</string>
+    <string name="are_you_sure_you_want_to_delete_the_image">Tem certeza de que deseja excluir a imagem?</string>
+    <string name="haven_t_saved_it_yet_do_you_want_to_exit">Ainda não salvou, deseja sair?</string>
+    <string name="change_your_whole_design_are_you_sure">Deseja redefinir tudo?</string>
+    <string name="character_maker">Character Maker</string>
+    <string name="no_item_here">Nenhum Item Aqui</string>
+    <string name="my_name">Meu nome</string>
+    <string name="random_name">Nome Aleatório</string>
+    <string name="My_NickName">Meu Apelido</string>
+    <string name="edit_name">Editar nome</string>
+    <string name="update">Atualizar</string>
+    <string name="custome_nickname">Personalizar apelido</string>
+    <string name="generate">Gerar</string>
+    <string name="input_name">Inserir nome</string>
+    <string name="successful">Bem-sucedido</string>
+    <string name="home">Início</string>
+    <string name="my_nickname">Meu apelido</string>
+    <string name="no_item_is_here">Nenhum item aqui</string>
+    <string name="please_input_your_name">Por favor, insira seu nome</string>
+    <string name="nickname">Apelido</string>
+    <string name="copied_to_clipboard">Copiado para a área de transferência</string>
+    <string name="saved">Salvo: %1$s</string>
+    <string name="copied_message">"Copiado "</string>
+    <string name="please_enter_a_nickname">Por favor, insira um apelido</string>
+    <string name="nickname_updated">Apelido atualizado</string>
+    <string name="deleted">Excluído: %1$s</string>
+    <string name="top">Top</string>
+    <string name="girl">Menina</string>
+    <string name="animals">Animais</string>
+    <string name="loved">Amado</string>
+    <string name="cool">Legal</string>
+    <string name="cute">Fofo</string>
+    <string name="film">Filme</string>
+    <string name="unique">Único</string>
+    <string name="boy">Menino</string>
+    <string name="food">Comida</string>
+    <string name="music">Música</string>
+    <string name="game">Jogo</string>
+    <string name="left_symbol">Símbolo Esquerdo</string>
+    <string name="unicode_styles">Estilos de texto</string>
+    <string name="right_symbol">Símbolo Direito</string>
+    <string name="name_updated">Nome atualizado</string>
+    <string name="name_restored_to_original">Nome restaurado ao original</string>
+    <string name="your_name_has_been_saved_to_my_nickname">Seu nome foi salvo em Meu apelido</string>
+    <string name="length">Comprimento:</string>
+    <string name="nickname_already_exists">Este apelido já existe</string>
+
+</resources>
