@@ -15,7 +15,9 @@ import com.xylophone.core.extensions.animateScaleEffect
 import com.xylophone.core.extensions.setOnSingleClick
 import com.xylophone.core.extensions.shakeViewEffect
 import com.xylophone.core.helper.RecordingManager
+import com.xylophone.core.helper.SharePreferenceHelper
 import com.xylophone.core.helper.SoundHelper
+import com.xylophone.data.model.Instrument
 import com.xylophone.data.model.Song
 import com.xylophone.data.model.SongLibrary
 import com.xylophone.databinding.ActivityPlayBinding
@@ -41,11 +43,26 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private var currentNoteIndex = 0
     private var highlightedButton: ImageView? = null
 
+    // Instrument Selection
+    private lateinit var preferenceHelper: SharePreferenceHelper
+    private var currentInstrument: Instrument = Instrument.PIANO
+
     override fun setViewBinding(): ActivityPlayBinding {
         return ActivityPlayBinding.inflate(LayoutInflater.from(this))
     }
 
     override fun initView() {
+        // Initialize preference helper
+        preferenceHelper = SharePreferenceHelper(this)
+
+        // Load saved instrument
+        val savedInstrument = preferenceHelper.getSelectedInstrument()
+        currentInstrument = Instrument.fromName(savedInstrument)
+
+        // Setup instrument selectors
+        setupInstrumentSelectors()
+        updateInstrumentUI()
+
         loadSounds()
         setupButtonMap()
         setupSwipeListener()
@@ -55,40 +72,35 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     private fun loadSounds() {
-        // Load các file âm thanh cho từng nốt nhạc
-        val soundResources = listOf(
-            R.raw.note_do,
-            R.raw.note_re,
-            R.raw.note_mi,
-            R.raw.note_fa,
-            R.raw.note_sol,
-            R.raw.note_la,
-            R.raw.note_si,
-            R.raw.note_do2
-        )
+        // Load các file âm thanh cho instrument hiện tại
+        val noteNames = listOf("Do", "Re", "Mi", "Fa", "Sol", "La", "Si", "Do2")
 
-        soundResources.forEach { resId ->
-            try {
-                if (!SoundHelper.isSoundNotNull(resId)) {
-                    SoundHelper.loadSound(this, resId)
+        noteNames.forEach { noteName ->
+            val resId = currentInstrument.getSoundResource(noteName)
+            if (resId != 0) {
+                try {
+                    if (!SoundHelper.isSoundNotNull(resId)) {
+                        SoundHelper.loadSound(this, resId)
+                    }
+                } catch (e: Exception) {
+                    // Bỏ qua nếu file âm thanh không tồn tại
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                // Bỏ qua nếu file âm thanh không tồn tại
-                e.printStackTrace()
             }
         }
     }
 
     private fun setupButtonMap() {
         binding.apply {
-            buttonSoundMap[btnDo] = R.raw.note_do
-            buttonSoundMap[btnRe] = R.raw.note_re
-            buttonSoundMap[btnMi] = R.raw.note_mi
-            buttonSoundMap[btnFa] = R.raw.note_fa
-            buttonSoundMap[btnSol] = R.raw.note_sol
-            buttonSoundMap[btnLa] = R.raw.note_la
-            buttonSoundMap[btnSi] = R.raw.note_si
-            buttonSoundMap[btnDo2] = R.raw.note_do2
+            // Map sounds based on current instrument
+            buttonSoundMap[btnDo] = currentInstrument.getSoundResource("Do")
+            buttonSoundMap[btnRe] = currentInstrument.getSoundResource("Re")
+            buttonSoundMap[btnMi] = currentInstrument.getSoundResource("Mi")
+            buttonSoundMap[btnFa] = currentInstrument.getSoundResource("Fa")
+            buttonSoundMap[btnSol] = currentInstrument.getSoundResource("Sol")
+            buttonSoundMap[btnLa] = currentInstrument.getSoundResource("La")
+            buttonSoundMap[btnSi] = currentInstrument.getSoundResource("Si")
+            buttonSoundMap[btnDo2] = currentInstrument.getSoundResource("Do2")
 
             buttonNameMap[btnDo] = "Do"
             buttonNameMap[btnRe] = "Re"
@@ -230,7 +242,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     private fun playNoteSound(resId: Int) {
         try {
-            SoundHelper.playSound(resId)
+            // Play sound với volume boost từ instrument hiện tại
+            SoundHelper.playSound(resId, currentInstrument.volumeBoost)
 
             // Nếu đang recording, ghi lại nốt nhạc
             if (RecordingManager.isRecording() && !isPlaybackMode) {
@@ -350,7 +363,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         val handler = Handler(Looper.getMainLooper())
         recording.notes.forEach { note ->
             handler.postDelayed({
-                SoundHelper.playSound(note.noteId)
+                // Play sound với volume boost
+                SoundHelper.playSound(note.noteId, currentInstrument.volumeBoost)
 
                 // Tìm button tương ứng và chạy animation
                 val button = buttonSoundMap.entries.find { it.value == note.noteId }?.key
@@ -500,6 +514,65 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     // ==================== END LEARNING MODE FUNCTIONS ====================
+
+    // ==================== INSTRUMENT SWITCHING FUNCTIONS ====================
+
+    // Setup instrument selector click listeners
+    private fun setupInstrumentSelectors() {
+        binding.apply {
+            img1.setOnSingleClick {
+                switchInstrument(Instrument.XYLOPHONE)
+            }
+
+            img2.setOnSingleClick {
+                switchInstrument(Instrument.PIANO)
+            }
+
+            img3.setOnSingleClick {
+                switchInstrument(Instrument.GUITAR)
+            }
+        }
+    }
+
+    // Switch to a new instrument
+    private fun switchInstrument(newInstrument: Instrument) {
+        if (currentInstrument == newInstrument) return
+
+        currentInstrument = newInstrument
+
+        // Save preference
+        preferenceHelper.setSelectedInstrument(newInstrument.name)
+
+        // Update UI
+        updateInstrumentUI()
+
+        // Reload sounds and button map
+        SoundHelper.releaseAllSounds()
+        loadSounds()
+        setupButtonMap()
+
+        // Show feedback
+        Toast.makeText(this, "Switched to ${newInstrument.displayName}", Toast.LENGTH_SHORT).show()
+    }
+
+    // Update UI to show selected instrument
+    private fun updateInstrumentUI() {
+        binding.apply {
+            // Reset all to unselected state (opacity)
+            img1.alpha = 0.5f
+            img2.alpha = 0.5f
+            img3.alpha = 0.5f
+
+            // Highlight selected instrument
+            when (currentInstrument) {
+                Instrument.XYLOPHONE -> img1.alpha = 1.0f
+                Instrument.PIANO -> img2.alpha = 1.0f
+                Instrument.GUITAR -> img3.alpha = 1.0f
+            }
+        }
+    }
+
+    // ==================== END INSTRUMENT SWITCHING FUNCTIONS ====================
 
     override fun initText() {
         // Không cần text đặc biệt cho màn hình này

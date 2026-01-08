@@ -119,4 +119,15 @@ class SharePreferenceHelper(val context: Context) {
         editor.putString(QUANTITY_UNZIPPED, json)
         editor.apply()
     }
+
+    // Instrument Selection
+    fun getSelectedInstrument(): String {
+        return preferences.getString(SharePreferenceKey.INSTRUMENT_KEY, "PIANO") ?: "PIANO"
+    }
+
+    fun setSelectedInstrument(instrument: String) {
+        val editor = preferences.edit()
+        editor.putString(SharePreferenceKey.INSTRUMENT_KEY, instrument)
+        editor.apply()
+    }
 }
