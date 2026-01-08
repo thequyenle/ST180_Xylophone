@@ -7,12 +7,17 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import com.xylophone.R
 import com.xylophone.core.base.BaseActivity
+import com.xylophone.core.extensions.animateScaleEffect
 import com.xylophone.core.extensions.setOnSingleClick
+import com.xylophone.core.extensions.shakeViewEffect
 import com.xylophone.core.helper.RecordingManager
 import com.xylophone.core.helper.SoundHelper
+import com.xylophone.data.model.Song
+import com.xylophone.data.model.SongLibrary
 import com.xylophone.databinding.ActivityPlayBinding
 
 class PlayActivity : BaseActivity<ActivityPlayBinding>() {
@@ -30,6 +35,12 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private var isPlaybackMode = false
     private var recordingId: String? = null
 
+    // Learning Mode
+    private var isLearningMode = false
+    private var currentSong: Song? = null
+    private var currentNoteIndex = 0
+    private var highlightedButton: ImageView? = null
+
     override fun setViewBinding(): ActivityPlayBinding {
         return ActivityPlayBinding.inflate(LayoutInflater.from(this))
     }
@@ -40,6 +51,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         setupSwipeListener()
         setupRecordingUI()
         checkPlaybackMode()
+        checkLearningMode()
     }
 
     private fun loadSounds() {
@@ -170,9 +182,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         // Nếu tìm thấy button và button khác với button trước đó
         if (foundButton != null && foundSoundId != null) {
             if (lastPlayedButtonMap[pointerId] != foundButton) {
-                // Chỉ phát khi chuyển sang button mới
-                playNoteSound(foundSoundId!!)
-                animateButton(foundButton!!)
+                // Learning Mode: validate correct note
+                if (isLearningMode) {
+                    handleLearningModeTouch(foundButton!!)
+                } else {
+                    // Normal Mode: chỉ phát khi chuyển sang button mới
+                    playNoteSound(foundSoundId!!)
+                    animateButton(foundButton!!)
+                }
                 lastPlayedButtonMap[pointerId] = foundButton
             }
             // Nếu cùng button → không phát lại (giữ nguyên)
@@ -204,7 +221,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
 
             btnMusic.setOnSingleClick {
-                // Placeholder cho chức năng music
+                // Mở SongListActivity
+                val intent = android.content.Intent(this@PlayActivity, SongListActivity::class.java)
+                startActivity(intent)
             }
         }
     }
@@ -348,6 +367,139 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             isPlaybackMode = false
         }, recording.duration + 500)
     }
+
+    // ==================== LEARNING MODE FUNCTIONS ====================
+
+    // Kiểm tra có phải learning mode không
+    private fun checkLearningMode() {
+        val mode = intent.getStringExtra("mode")
+        val songId = intent.getStringExtra("song_id")
+
+        if (mode == "LEARNING_MODE" && songId != null) {
+            isLearningMode = true
+            currentSong = SongLibrary.getSongById(songId)
+            currentNoteIndex = 0
+
+            // Setup UI cho learning mode
+            binding.apply {
+                btnRecord.isVisible = false
+                btnMusic.isVisible = false
+                btnStop.isVisible = false
+                btnCount.isVisible = true
+            }
+
+            // Hiển thị progress
+            updateLearningProgress()
+            // Highlight nốt đầu tiên
+            highlightCurrentNote()
+        }
+    }
+
+    // Xử lý touch event trong learning mode
+    private fun handleLearningModeTouch(clickedButton: ImageView) {
+        val song = currentSong ?: return
+
+        // Check bounds để tránh crash
+        if (currentNoteIndex >= song.notes.size) {
+            return // Bài hát đã hoàn thành, ignore click
+        }
+
+        val clickedNoteName = buttonNameMap[clickedButton]
+        val correctNoteName = song.notes[currentNoteIndex]
+
+        if (clickedNoteName == correctNoteName) {
+            // ✅ ĐÚNG
+            val soundId = buttonSoundMap[clickedButton]
+            soundId?.let { playNoteSound(it) }
+
+            // Success animation
+            clickedButton.animateScaleEffect(0.8f, 150)
+            animateButton(clickedButton)
+
+            // Move to next note
+            Handler(Looper.getMainLooper()).postDelayed({
+                moveToNextNote()
+            }, 300)
+        } else {
+            // ❌ SAI - Shake animation và không phát âm
+            clickedButton.shakeViewEffect(duration = 50, repeatCount = 3, shakeDistance = 10f)
+            // Có thể thêm sound effect "wrong" ở đây nếu muốn
+        }
+    }
+
+    // Highlight nốt hiện tại
+    private fun highlightCurrentNote() {
+        val song = currentSong ?: return
+        if (currentNoteIndex >= song.notes.size) return
+
+        // Reset highlight của button trước
+        highlightedButton?.alpha = 1.0f
+        highlightedButton?.scaleX = 1.0f
+        highlightedButton?.scaleY = 1.0f
+
+        // Tìm button cần highlight
+        val correctNoteName = song.notes[currentNoteIndex]
+        val buttonToHighlight = buttonNameMap.entries.find { it.value == correctNoteName }?.key
+
+        buttonToHighlight?.let { button ->
+            highlightedButton = button
+            // Phóng to và làm nổi bật
+            button.scaleX = 1.2f
+            button.scaleY = 1.2f
+            button.alpha = 1.0f
+
+            // Pulse animation liên tục
+            startPulseAnimation(button)
+        }
+    }
+
+    // Animation pulse liên tục cho button được highlight
+    private fun startPulseAnimation(button: ImageView) {
+        val pulseAnim = AnimationUtils.loadAnimation(this, R.anim.button_pulse)
+        pulseAnim.repeatCount = android.view.animation.Animation.INFINITE
+        button.startAnimation(pulseAnim)
+    }
+
+    // Chuyển sang nốt tiếp theo
+    private fun moveToNextNote() {
+        val song = currentSong ?: return
+        currentNoteIndex++
+
+        if (currentNoteIndex >= song.notes.size) {
+            // Hoàn thành bài hát
+            showCompletionDialog()
+        } else {
+            // Highlight nốt tiếp theo
+            updateLearningProgress()
+            highlightCurrentNote()
+        }
+    }
+
+    // Cập nhật progress
+    private fun updateLearningProgress() {
+        val song = currentSong ?: return
+        binding.tvCount.text = "${currentNoteIndex + 1} / ${song.notes.size}"
+    }
+
+    // Hiển thị dialog hoàn thành
+    private fun showCompletionDialog() {
+        // Reset highlight
+        highlightedButton?.apply {
+            alpha = 1.0f
+            scaleX = 1.0f
+            scaleY = 1.0f
+            clearAnimation()
+        }
+
+        Toast.makeText(this, "Congratulations! You completed the song!", Toast.LENGTH_LONG).show()
+
+        // Delay rồi quay về
+        Handler(Looper.getMainLooper()).postDelayed({
+            finish()
+        }, 2000)
+    }
+
+    // ==================== END LEARNING MODE FUNCTIONS ====================
 
     override fun initText() {
         // Không cần text đặc biệt cho màn hình này

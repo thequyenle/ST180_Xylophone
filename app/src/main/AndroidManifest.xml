@@ -57,6 +57,10 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity_app.main.SongListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity_app.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
