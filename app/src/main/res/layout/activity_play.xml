@@ -43,6 +43,73 @@
         app:layout_constraintBottom_toBottomOf="@id/img2"
         app:layout_constraintStart_toEndOf="@id/img2"
         app:layout_constraintTop_toTopOf="@id/img1" />
+    
+    <ImageView
+        android:id="@+id/btnRecord"
+        android:layout_width="96dp"
+        android:layout_height="44dp"
+        android:src="@drawable/record_bg"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/img2"
+        app:layout_constraintBottom_toBottomOf="@id/img2"/>
+
+    <ImageView
+        android:id="@+id/btnMusic"
+        android:layout_width="96dp"
+        android:layout_height="44dp"
+        android:src="@drawable/music_bg"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toStartOf="@id/btnRecord"
+        app:layout_constraintTop_toTopOf="@id/img2"
+        app:layout_constraintBottom_toBottomOf="@id/img2"/>
+
+
+
+    <ImageView
+        android:id="@+id/btnStop"
+        android:layout_width="96dp"
+        android:layout_height="44dp"
+        android:background="@drawable/stop_ic"
+        android:scaleType="fitXY"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/img2"
+        app:layout_constraintBottom_toBottomOf="@id/img2"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/btnCount"
+        android:layout_width="96dp"
+        android:layout_height="44dp"
+        android:background="@drawable/ic_count"
+        android:scaleType="fitXY"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@id/btnStop"
+        app:layout_constraintTop_toTopOf="@id/img2"
+        app:layout_constraintBottom_toBottomOf="@id/img2"
+        >
+        <TextView
+            android:id="@+id/tvCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/chewy_regular"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    
+
+
+
 
     <ImageView
         android:id="@+id/frameMusic"
@@ -106,7 +173,7 @@
         android:layout_marginEnd="8dp"
         android:src="@drawable/btn_fa"
         android:scaleType="fitXY"
-        app:layout_constraintHeight_percent="0.62"
+        app:layout_constraintHeight_percent="0.625"
         app:layout_constraintStart_toEndOf="@id/btnMi"
         app:layout_constraintEnd_toStartOf="@id/btnSol"
         app:layout_constraintTop_toTopOf="@id/frameMusic"
@@ -148,7 +215,7 @@
         android:layout_marginEnd="8dp"
         android:src="@drawable/btn_si"
         android:scaleType="fitXY"
-        app:layout_constraintHeight_percent=".57"
+        app:layout_constraintHeight_percent=".568"
         app:layout_constraintStart_toEndOf="@id/btnLa"
         app:layout_constraintEnd_toStartOf="@id/btnDo2"
         app:layout_constraintTop_toTopOf="@id/frameMusic"
