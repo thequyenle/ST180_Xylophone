@@ -1,11 +1,16 @@
 package com.xylophone.activity_app.main
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import com.xylophone.R
 import com.xylophone.core.base.BaseActivity
+import com.xylophone.core.extensions.setOnSingleClick
+import com.xylophone.core.helper.RecordingManager
 import com.xylophone.core.helper.SoundHelper
 import com.xylophone.databinding.ActivityPlayBinding
 
@@ -14,6 +19,15 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     // Track button đã phát cho từng ngón tay (pointer)
     private val lastPlayedButtonMap = mutableMapOf<Int, ImageView?>()
     private val buttonSoundMap = mutableMapOf<ImageView, Int>()
+    private val buttonNameMap = mutableMapOf<ImageView, String>()
+
+    // Recording
+    private val timerHandler = Handler(Looper.getMainLooper())
+    private var timerRunnable: Runnable? = null
+
+    // Playback
+    private var isPlaybackMode = false
+    private var recordingId: String? = null
 
     override fun setViewBinding(): ActivityPlayBinding {
         return ActivityPlayBinding.inflate(LayoutInflater.from(this))
@@ -23,6 +37,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         loadSounds()
         setupButtonMap()
         setupSwipeListener()
+        setupRecordingUI()
+        checkPlaybackMode()
     }
 
     private fun loadSounds() {
@@ -60,6 +76,15 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             buttonSoundMap[btnLa] = R.raw.note_la
             buttonSoundMap[btnSi] = R.raw.note_si
             buttonSoundMap[btnDo2] = R.raw.note_do2
+
+            buttonNameMap[btnDo] = "Do"
+            buttonNameMap[btnRe] = "Re"
+            buttonNameMap[btnMi] = "Mi"
+            buttonNameMap[btnFa] = "Fa"
+            buttonNameMap[btnSol] = "Sol"
+            buttonNameMap[btnLa] = "La"
+            buttonNameMap[btnSi] = "Si"
+            buttonNameMap[btnDo2] = "Do2"
         }
     }
 
@@ -167,17 +192,143 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun viewListener() {
-        // Touch listener đã xử lý cả click và swipe
-        // Không cần thêm click listener riêng
+        binding.apply {
+            btnRecord.setOnSingleClick {
+                startRecording()
+            }
+
+            btnStop.setOnSingleClick {
+                stopRecording()
+            }
+
+            btnMusic.setOnSingleClick {
+                // Placeholder cho chức năng music
+            }
+        }
     }
 
     private fun playNoteSound(resId: Int) {
         try {
             SoundHelper.playSound(resId)
+
+            // Nếu đang recording, ghi lại nốt nhạc
+            if (RecordingManager.isRecording() && !isPlaybackMode) {
+                val button = buttonSoundMap.entries.find { it.value == resId }?.key
+                val noteName = button?.let { buttonNameMap[it] } ?: "Unknown"
+                RecordingManager.recordNote(resId, noteName)
+            }
         } catch (e: Exception) {
             // Bỏ qua nếu âm thanh không phát được
             e.printStackTrace()
         }
+    }
+
+    // Setup UI cho recording
+    private fun setupRecordingUI() {
+        binding.apply {
+            btnStop.isVisible = false
+            btnCount.isVisible = false
+            btnRecord.isVisible = true
+            btnMusic.isVisible = true
+            tvCount.text = "00:00"
+        }
+    }
+
+    // Kiểm tra có phải playback mode không
+    private fun checkPlaybackMode() {
+        recordingId = intent.getStringExtra("recording_id")
+        if (recordingId != null) {
+            isPlaybackMode = true
+            playbackRecording()
+        }
+    }
+
+    // Bắt đầu recording
+    private fun startRecording() {
+        RecordingManager.startRecording()
+
+        binding.apply {
+            btnRecord.isVisible = false
+            btnMusic.isVisible = false
+            btnStop.isVisible = true
+            btnCount.isVisible = true
+        }
+
+        startTimer()
+    }
+
+    // Dừng recording
+    private fun stopRecording() {
+        val recording = RecordingManager.stopRecording(this, "My Recording")
+        stopTimer()
+
+        binding.apply {
+            btnRecord.isVisible = true
+            btnMusic.isVisible = true
+            btnStop.isVisible = false
+            btnCount.isVisible = false
+            tvCount.text = "00:00"
+        }
+
+        // Có thể show toast hoặc dialog
+        recording?.let {
+            // Recording đã được lưu
+        }
+    }
+
+    // Start timer
+    private fun startTimer() {
+        timerRunnable = object : Runnable {
+            override fun run() {
+                val duration = RecordingManager.getCurrentDuration()
+                binding.tvCount.text = formatDuration(duration)
+                timerHandler.postDelayed(this, 100)
+            }
+        }
+        timerHandler.post(timerRunnable!!)
+    }
+
+    // Stop timer
+    private fun stopTimer() {
+        timerRunnable?.let {
+            timerHandler.removeCallbacks(it)
+        }
+        timerRunnable = null
+    }
+
+    // Format duration to mm:ss
+    private fun formatDuration(millis: Long): String {
+        val seconds = (millis / 1000) % 60
+        val minutes = (millis / 1000) / 60
+        return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    // Playback recording
+    private fun playbackRecording() {
+        val recording = recordingId?.let { RecordingManager.getRecording(this, it) } ?: return
+
+        binding.apply {
+            btnRecord.isVisible = false
+            btnMusic.isVisible = false
+            btnStop.isVisible = false
+            btnCount.isVisible = true
+        }
+
+        // Play notes với timing
+        val handler = Handler(Looper.getMainLooper())
+        recording.notes.forEach { note ->
+            handler.postDelayed({
+                SoundHelper.playSound(note.noteId)
+                // Update count
+                binding.tvCount.text = formatDuration(note.timestamp)
+            }, note.timestamp)
+        }
+
+        // Khi xong, reset UI
+        handler.postDelayed({
+            setupRecordingUI()
+            isPlaybackMode = false
+        }, recording.duration + 500)
     }
 
     override fun initText() {
