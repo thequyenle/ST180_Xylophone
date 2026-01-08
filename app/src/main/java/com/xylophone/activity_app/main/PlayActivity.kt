@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import com.xylophone.R
@@ -171,6 +172,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             if (lastPlayedButtonMap[pointerId] != foundButton) {
                 // Chỉ phát khi chuyển sang button mới
                 playNoteSound(foundSoundId!!)
+                animateButton(foundButton!!)
                 lastPlayedButtonMap[pointerId] = foundButton
             }
             // Nếu cùng button → không phát lại (giữ nguyên)
@@ -219,6 +221,17 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
         } catch (e: Exception) {
             // Bỏ qua nếu âm thanh không phát được
+            e.printStackTrace()
+        }
+    }
+
+    // Animate button khi phát âm thanh
+    private fun animateButton(button: ImageView) {
+        try {
+            // Load và start pulse animation
+            val pulseAnim = AnimationUtils.loadAnimation(this, R.anim.button_pulse)
+            button.startAnimation(pulseAnim)
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
