@@ -332,6 +332,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         recording.notes.forEach { note ->
             handler.postDelayed({
                 SoundHelper.playSound(note.noteId)
+
+                // Tìm button tương ứng và chạy animation
+                val button = buttonSoundMap.entries.find { it.value == note.noteId }?.key
+                button?.let { animateButton(it) }
+
                 // Update count
                 binding.tvCount.text = formatDuration(note.timestamp)
             }, note.timestamp)
