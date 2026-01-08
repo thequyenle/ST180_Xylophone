@@ -205,9 +205,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 lastPlayedButtonMap[pointerId] = foundButton
             }
             // Nếu cùng button → không phát lại (giữ nguyên)
+        } else {
+            // FIX: Nếu swipe ra ngoài (không chạm button nào), reset tracking
+            // Điều này cho phép user swipe lại vào button cũ và vẫn phát âm
+            lastPlayedButtonMap[pointerId] = null
         }
-        // Nếu không chạm vào button nào → không xóa lastPlayedButtonMap
-        // Chỉ xóa khi nhấc tay lên (ACTION_UP/POINTER_UP)
     }
 
     private fun isTouchingButton(button: ImageView, x: Float, y: Float): Boolean {
