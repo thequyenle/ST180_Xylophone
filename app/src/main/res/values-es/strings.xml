@@ -114,5 +114,6 @@
     <string name="length">Longitud:</string>
     <string name="nickname_already_exists">Este apodo ya existe</string>
     <string name="ok">Ok</string>
+    <string name="stop">Stop</string>
 
 </resources>

@@ -114,5 +114,6 @@
     <string name="length">Longueur :</string>
     <string name="nickname_already_exists">Ce pseudo existe déjà</string>
     <string name="ok">Ok</string>
+    <string name="stop">Stop</string>
 
 </resources>

@@ -114,5 +114,6 @@
     <string name="length">Comprimento:</string>
     <string name="nickname_already_exists">Este apelido já existe</string>
     <string name="ok">Ok</string>
+    <string name="stop">Stop</string>
 
 </resources>

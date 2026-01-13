@@ -12,8 +12,10 @@ import androidx.core.view.isVisible
 import com.xylophone.R
 import com.xylophone.core.base.BaseActivity
 import com.xylophone.core.extensions.animateScaleEffect
+import com.xylophone.core.extensions.invisible
 import com.xylophone.core.extensions.setOnSingleClick
 import com.xylophone.core.extensions.shakeViewEffect
+import com.xylophone.core.extensions.visible
 import com.xylophone.core.helper.RecordingManager
 import com.xylophone.core.helper.SharePreferenceHelper
 import com.xylophone.core.helper.SoundHelper
@@ -22,6 +24,7 @@ import com.xylophone.data.model.Recording
 import com.xylophone.data.model.Song
 import com.xylophone.data.model.SongLibrary
 import com.xylophone.databinding.ActivityPlayBinding
+
 
 class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
@@ -48,6 +51,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private lateinit var preferenceHelper: SharePreferenceHelper
     private var currentInstrument: Instrument = Instrument.PIANO
 
+    private val playbackHandler = Handler(Looper.getMainLooper())
+    private val playbackRunnables = mutableListOf<Runnable>()
+    private var isPlaybackStopped = false
+
     override fun setViewBinding(): ActivityPlayBinding {
         return ActivityPlayBinding.inflate(LayoutInflater.from(this))
     }
@@ -60,6 +67,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         val savedInstrument = preferenceHelper.getSelectedInstrument()
         currentInstrument = Instrument.fromName(savedInstrument)
 
+        if(!isLearningMode&&!isPlaybackMode)
+        {
+            binding.idMusic.setText(R.string.music)
+        }
         // Setup instrument selectors
         setupInstrumentSelectors()
         updateInstrumentUI()
@@ -232,7 +243,12 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
 
             btnStop.setOnSingleClick {
-                stopRecording()
+                when {
+                    isLearningMode -> stopLearningMode()
+                    isPlaybackMode -> stopPlayback()
+                    RecordingManager.isRecording() -> stopRecording()
+
+                }
             }
 
             btnMusic.setOnSingleClick {
@@ -274,10 +290,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     // Setup UI cho recording
     private fun setupRecordingUI() {
         binding.apply {
-            btnStop.isVisible = false
-            btnCount.isVisible = false
-            btnRecord.isVisible = true
-            btnMusic.isVisible = true
+            btnStop.invisible()
+            btnCount.invisible()
+            btnRecord.visible()
+            btnMusic.visible()
             tvCount.text = "00:00"
         }
     }
@@ -297,10 +313,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         RecordingManager.startRecording(currentInstrument.name)
 
         binding.apply {
-            btnRecord.isVisible = false
-            btnMusic.isVisible = false
-            btnStop.isVisible = true
-            btnCount.isVisible = true
+            btnRecord.invisible()
+            btnMusic.invisible()
+            btnStop.visible()
+            btnCount.visible()
 
             // DISABLE instrument switching khi đang recording
             img1.isEnabled = false
@@ -339,6 +355,50 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             showRecordingNameDialog(recording)
         }
     }
+
+    private fun stopPlayback(){
+        isPlaybackStopped = true
+
+        playbackRunnables.forEach { playbackHandler.removeCallbacks(it) }
+        playbackRunnables.clear()
+
+        setupRecordingUI()
+        isPlaybackMode = false
+
+        // Re-enable instrument switching
+        binding.apply {
+            img1.isEnabled = true
+            img2.isEnabled = true
+            img3.isEnabled = true
+            updateInstrumentUI()
+            idMusic.setText(R.string.music)
+        }
+    }
+    private fun stopLearningMode() {
+        isLearningMode = false
+        currentSong = null
+        currentNoteIndex = 0
+
+        highlightedButton?.apply {
+            clearAnimation()
+            alpha = 1f
+            scaleX = 1f
+            scaleY = 1f
+        }
+        highlightedButton = null
+
+        // bật lại instrument
+        binding.apply {
+            img1.isEnabled = true
+            img2.isEnabled = true
+            img3.isEnabled = true
+            updateInstrumentUI()
+            idMusic.setText(R.string.music)
+        }
+
+        setupRecordingUI()
+    }
+
 
     /**
      * Show dialog để nhập tên cho recording
@@ -405,11 +465,15 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             updateInstrumentUI()
         }
 
+        isPlaybackStopped = false
+        playbackRunnables.forEach { playbackHandler.removeCallbacks(it) }
+        playbackRunnables.clear()
+
         binding.apply {
-            btnRecord.isVisible = false
-            btnMusic.isVisible = false
-            btnStop.isVisible = false
-            btnCount.isVisible = true
+            btnRecord.invisible()
+            btnMusic.invisible()
+            btnStop.visible()
+            btnCount.visible()
 
             // DISABLE instrument switching khi đang playback
             img1.isEnabled = false
@@ -421,23 +485,35 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         }
 
         // Play notes với timing
-        val handler = Handler(Looper.getMainLooper())
         recording.notes.forEach { note ->
-            handler.postDelayed({
-                // Play sound với volume boost
-                SoundHelper.playSound(note.noteId, currentInstrument.volumeBoost)
 
-                // Tìm button tương ứng và chạy animation
-                val button = buttonSoundMap.entries.find { it.value == note.noteId }?.key
-                button?.let { animateButton(it) }
 
-                // Update count
-                binding.tvCount.text = formatDuration(note.timestamp)
-            }, note.timestamp)
+            val r = Runnable {
+                if(isPlaybackStopped) return@Runnable
+
+
+                    // Play sound với volume boost
+                    SoundHelper.playSound(note.noteId, currentInstrument.volumeBoost)
+
+                    // Tìm button tương ứng và chạy animation
+                    val button = buttonSoundMap.entries.find { it.value == note.noteId }?.key
+                    button?.let { animateButton(it) }
+
+                    // Update count
+                    binding.tvCount.text = formatDuration(note.timestamp)
+
+            }
+
+            playbackRunnables.add(r)
+            playbackHandler.postDelayed(r,note.timestamp)
         }
 
         // Khi xong, reset UI và re-enable instrument switching
-        handler.postDelayed({
+
+
+        val endR = Runnable {
+            if(isPlaybackStopped) return@Runnable
+
             setupRecordingUI()
             isPlaybackMode = false
 
@@ -448,7 +524,11 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 img3.isEnabled = true
                 updateInstrumentUI()
             }
-        }, recording.duration + 500)
+
+        }
+         playbackRunnables.add(endR)
+        playbackHandler.postDelayed(endR,recording.duration +500)
+
     }
 
     // ==================== LEARNING MODE FUNCTIONS ====================
@@ -465,10 +545,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
             // Setup UI cho learning mode
             binding.apply {
-                btnRecord.isVisible = false
-                btnMusic.isVisible = false
-                btnStop.isVisible = false
-                btnCount.isVisible = true
+                btnRecord.invisible()
+                btnMusic.visible()
+                btnStop.visible()
+                btnCount.invisible()
 
                 // DISABLE instrument switching trong learning mode
                 img1.isEnabled = false
@@ -477,6 +557,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 img1.alpha = 0.3f
                 img2.alpha = 0.3f
                 img3.alpha = 0.3f
+                idMusic.text = currentSong?.name?:"Music"
             }
 
             // Hiển thị progress
@@ -643,16 +724,29 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     // Update UI to show selected instrument
     private fun updateInstrumentUI() {
         binding.apply {
+            // Default alpha (unselected)
+            img1.alpha = 1f
+            img2.alpha = 1f
+            img3.alpha = 1f
             // Reset all to unselected state (opacity)
-            img1.alpha = 0.5f
-            img2.alpha = 0.5f
-            img3.alpha = 0.5f
+            img1.setImageResource(R.drawable.xylo_unselected)
+            img2.setImageResource(R.drawable.piano_unselected)
+            img3.setImageResource(R.drawable.guitar_unselected)
 
             // Highlight selected instrument
             when (currentInstrument) {
-                Instrument.XYLOPHONE -> img1.alpha = 1.0f
-                Instrument.PIANO -> img2.alpha = 1.0f
-                Instrument.GUITAR -> img3.alpha = 1.0f
+                Instrument.XYLOPHONE -> {
+                    img1.setImageResource(R.drawable.xylo_selected)
+                    img1.alpha = 1.0f
+                }
+                Instrument.PIANO -> {
+                    img2.setImageResource(R.drawable.piano_selected)
+                    img2.alpha = 1.0f
+                }
+                Instrument.GUITAR -> {
+                    img3.setImageResource(R.drawable.guitar_selected)
+                    img3.alpha = 1.0f
+                }
             }
         }
     }

@@ -114,5 +114,6 @@
     <string name="length">Panjang:</string>
     <string name="nickname_already_exists">Nama panggilan ini sudah ada</string>
     <string name="ok">Ok</string>
+    <string name="stop">Stop</string>
 
 </resources>
