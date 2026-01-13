@@ -113,5 +113,6 @@
     <string name="your_name_has_been_saved_to_my_nickname">Votre nom a été enregistré dans Mon surnom</string>
     <string name="length">Longueur :</string>
     <string name="nickname_already_exists">Ce pseudo existe déjà</string>
+    <string name="ok">Ok</string>
 
 </resources>

@@ -57,8 +57,7 @@ class YesNoDialog(
 
     private fun initBottom() {
         binding.flBottom.apply {
-            imvBottomLeft.gone()
-            imvBottomRight.gone()
+
 
             tvBottomLeft.text = context.strings(R.string.no)
             tvBottomRight.text = context.strings(R.string.yes)

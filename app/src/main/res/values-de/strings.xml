@@ -113,4 +113,5 @@
     <string name="name_restored_to_original">Name auf Original wiederhergestellt</string>
     <string name="your_name_has_been_saved_to_my_nickname">Ihr Name wurde in Mein Spitzname gespeichert</string>
     <string name="length">Länge:</string>
+    <string name="ok">Ok</string>
 </resources>

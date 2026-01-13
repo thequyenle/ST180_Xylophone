@@ -9,8 +9,8 @@ enum class Instrument(
     val volumeBoost: Float  // Volume multiplier để normalize sounds
 ) {
     PIANO("Piano", "note_", R.drawable.piano_selected, 1.0f),
-    XYLOPHONE("Xylophone", "_xylo", R.drawable.xylophone_selected, 1.2f),  // Boost 20%
-    GUITAR("Guitar", "_guitar", R.drawable.guitar_selected, 1.3f);  // Boost 30%
+    XYLOPHONE("Xylophone", "_xylo", R.drawable.xylophone_selected, 1.0f),  // Boost 20%
+    GUITAR("Guitar", "_guitar", R.drawable.guitar_selected, 1.0f);  // Boost 30%
 
     fun getSoundResource(noteName: String): Int {
         return when (this) {

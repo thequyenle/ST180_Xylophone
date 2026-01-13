@@ -113,5 +113,6 @@
     <string name="your_name_has_been_saved_to_my_nickname">आपका नाम मेरा निकनेम में सहेजा गया है</string>
     <string name="length">लंबाई:</string>
     <string name="nickname_already_exists">यह उपनाम पहले से मौजूद है</string>
+    <string name="ok">Ok</string>
 
 </resources>

@@ -18,6 +18,7 @@ import com.xylophone.core.helper.RecordingManager
 import com.xylophone.core.helper.SharePreferenceHelper
 import com.xylophone.core.helper.SoundHelper
 import com.xylophone.data.model.Instrument
+import com.xylophone.data.model.Recording
 import com.xylophone.data.model.Song
 import com.xylophone.data.model.SongLibrary
 import com.xylophone.databinding.ActivityPlayBinding
@@ -292,13 +293,22 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     // Bắt đầu recording
     private fun startRecording() {
-        RecordingManager.startRecording()
+        // Pass instrument hiện tại vào RecordingManager
+        RecordingManager.startRecording(currentInstrument.name)
 
         binding.apply {
             btnRecord.isVisible = false
             btnMusic.isVisible = false
             btnStop.isVisible = true
             btnCount.isVisible = true
+
+            // DISABLE instrument switching khi đang recording
+            img1.isEnabled = false
+            img2.isEnabled = false
+            img3.isEnabled = false
+            img1.alpha = 0.3f
+            img2.alpha = 0.3f
+            img3.alpha = 0.3f
         }
 
         startTimer()
@@ -306,7 +316,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     // Dừng recording
     private fun stopRecording() {
-        val recording = RecordingManager.stopRecording(this, "My Recording")
+        val pendingRecording = RecordingManager.stopRecording()  // Dừng nhưng CHƯA lưu
         stopTimer()
 
         binding.apply {
@@ -315,12 +325,42 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             btnStop.isVisible = false
             btnCount.isVisible = false
             tvCount.text = "00:00"
+
+            // RE-ENABLE instrument switching sau khi stop recording
+            img1.isEnabled = true
+            img2.isEnabled = true
+            img3.isEnabled = true
+            // Restore alpha dựa trên instrument hiện tại
+            updateInstrumentUI()
         }
 
-        // Có thể show toast hoặc dialog
-        recording?.let {
-            // Recording đã được lưu
+        // Show dialog để user nhập tên
+        pendingRecording?.let { recording ->
+            showRecordingNameDialog(recording)
         }
+    }
+
+    /**
+     * Show dialog để nhập tên cho recording
+     */
+    private fun showRecordingNameDialog(recording: Recording) {
+        val dialog = com.xylophone.dialog.RecordingNameDialog(this, recording)
+
+        // Callback khi user bấm Save
+        dialog.onSaveClick = { name ->
+            // Lưu recording với tên user đã nhập
+            RecordingManager.savePendingRecording(this, name)
+            Toast.makeText(this, "Saved: $name", Toast.LENGTH_SHORT).show()
+        }
+
+        // Callback khi user bấm Cancel
+        dialog.onCancelClick = {
+            // Discard recording (không lưu)
+            RecordingManager.discardPendingRecording()
+            Toast.makeText(this, "Recording discarded", Toast.LENGTH_SHORT).show()
+        }
+
+        dialog.show()
     }
 
     // Start timer
@@ -354,11 +394,30 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private fun playbackRecording() {
         val recording = recordingId?.let { RecordingManager.getRecording(this, it) } ?: return
 
+        // AUTO-LOAD instrument từ recording
+        val recordedInstrument = Instrument.fromName(recording.instrumentName)
+        if (currentInstrument != recordedInstrument) {
+            // Switch sang instrument đúng (không cần save preference vì đây là playback mode)
+            currentInstrument = recordedInstrument
+            SoundHelper.releaseAllSounds()
+            loadSounds()
+            setupButtonMap()
+            updateInstrumentUI()
+        }
+
         binding.apply {
             btnRecord.isVisible = false
             btnMusic.isVisible = false
             btnStop.isVisible = false
             btnCount.isVisible = true
+
+            // DISABLE instrument switching khi đang playback
+            img1.isEnabled = false
+            img2.isEnabled = false
+            img3.isEnabled = false
+            img1.alpha = 0.3f
+            img2.alpha = 0.3f
+            img3.alpha = 0.3f
         }
 
         // Play notes với timing
@@ -377,10 +436,18 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }, note.timestamp)
         }
 
-        // Khi xong, reset UI
+        // Khi xong, reset UI và re-enable instrument switching
         handler.postDelayed({
             setupRecordingUI()
             isPlaybackMode = false
+
+            // RE-ENABLE instrument switching sau khi playback xong
+            binding.apply {
+                img1.isEnabled = true
+                img2.isEnabled = true
+                img3.isEnabled = true
+                updateInstrumentUI()
+            }
         }, recording.duration + 500)
     }
 
@@ -402,6 +469,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 btnMusic.isVisible = false
                 btnStop.isVisible = false
                 btnCount.isVisible = true
+
+                // DISABLE instrument switching trong learning mode
+                img1.isEnabled = false
+                img2.isEnabled = false
+                img3.isEnabled = false
+                img1.alpha = 0.3f
+                img2.alpha = 0.3f
+                img3.alpha = 0.3f
             }
 
             // Hiển thị progress
@@ -505,6 +580,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             scaleX = 1.0f
             scaleY = 1.0f
             clearAnimation()
+        }
+
+        // RE-ENABLE instrument switching khi hoàn thành
+        binding.apply {
+            img1.isEnabled = true
+            img2.isEnabled = true
+            img3.isEnabled = true
+            updateInstrumentUI()
         }
 
         Toast.makeText(this, "Congratulations! You completed the song!", Toast.LENGTH_LONG).show()

@@ -113,5 +113,6 @@
     <string name="your_name_has_been_saved_to_my_nickname">Seu nome foi salvo em Meu apelido</string>
     <string name="length">Comprimento:</string>
     <string name="nickname_already_exists">Este apelido já existe</string>
+    <string name="ok">Ok</string>
 
 </resources>

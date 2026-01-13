@@ -113,4 +113,5 @@
     <string name="name_restored_to_original">Name restored to original</string>
     <string name="your_name_has_been_saved_to_my_nickname">Your name has been saved to my nickname</string>
     <string name="length">Length:</string>
+    <string name="ok">Ok</string>
 </resources>

@@ -6,11 +6,11 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:baselineAligned="false"
+        android:layout_marginHorizontal="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="360:44"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,18 +22,10 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:background="@drawable/img_btn_bottom_new"
+            android:background="@drawable/bg_btn_cancel"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp">
-
-            <!--        imvBottomLeft-->
-            <ImageView
-                android:id="@+id/imvBottomLeft"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_share_set" />
 
             <!--        tvBottomLeft-->
             <TextView
@@ -41,9 +33,9 @@
                 style="@style/single_marquee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/share"
-                android:textColor="@color/red_app"
+                android:fontFamily="@font/chewy_regular"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -54,18 +46,10 @@
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:background="@drawable/img_btn_bottom_right"
+            android:background="@drawable/bg_btn_ok"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp">
-
-            <!--        imvBottomRight-->
-            <ImageView
-                android:id="@+id/imvBottomRight"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_download_white" />
 
             <!--        tvBottomRight-->
             <TextView
@@ -73,8 +57,8 @@
                 style="@style/single_marquee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/download"
+                android:fontFamily="@font/chewy_regular"
+                android:text="@string/ok"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>

@@ -61,6 +61,7 @@
     <string name="an_error_occurred">An error occurred, please try again later.</string>
     <string name="image_has_been_saved_successfully">Image has been saved successfully!</string>
     <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
     <string name="are_you_sure_want_to_delete_this_item">Do you want to delete this nickname?</string>
     <string name="downloading">Downloading...</string>
     <string name="successfully">Successfully</string>
@@ -114,4 +115,5 @@
     <string name="name_restored_to_original">Name restored to original</string>
     <string name="your_name_has_been_saved_to_my_nickname">Your name has been saved to my nickname</string>
     <string name="length">Length:</string>
+    <string name="ok">Ok</string>
 </resources>

@@ -14,34 +14,58 @@ object RecordingManager {
     private var isRecording = false
     private var recordingStartTime = 0L
     private val currentNotes = mutableListOf<RecordedNote>()
+    private var currentInstrument = "PIANO"  // Track instrument đang dùng khi record
+    private var pendingRecording: Recording? = null  // Recording chưa được lưu (đợi user đặt tên)
     private val gson = Gson()
 
     // Bắt đầu recording
-    fun startRecording() {
+    fun startRecording(instrumentName: String = "PIANO") {
         isRecording = true
         recordingStartTime = System.currentTimeMillis()
         currentNotes.clear()
+        currentInstrument = instrumentName  // Lưu instrument đang dùng
     }
 
-    // Dừng recording và lưu
-    fun stopRecording(context: Context, name: String = "Recording"): Recording? {
+    // Dừng recording (CHƯA lưu - chờ user đặt tên)
+    fun stopRecording(): Recording? {
         if (!isRecording) return null
 
         isRecording = false
         val duration = System.currentTimeMillis() - recordingStartTime
 
-        val recording = Recording(
+        // Tạo recording tạm thời (pending)
+        pendingRecording = Recording(
             id = UUID.randomUUID().toString(),
-            name = "$name ${getRecordingCount(context) + 1}",
+            name = "Untitled",  // Tên tạm, sẽ được thay đổi khi user nhập
             duration = duration,
             notes = currentNotes.toList(),
-            createdAt = System.currentTimeMillis()
+            createdAt = System.currentTimeMillis(),
+            instrumentName = currentInstrument
         )
 
-        saveRecording(context, recording)
         currentNotes.clear()
-        return recording
+        return pendingRecording
     }
+
+    // Lưu pending recording với tên custom
+    fun savePendingRecording(context: Context, name: String): Recording? {
+        val recording = pendingRecording ?: return null
+
+        // Tạo recording mới với tên đã nhập
+        val namedRecording = recording.copy(name = name)
+
+        saveRecording(context, namedRecording)
+        pendingRecording = null  // Clear pending
+        return namedRecording
+    }
+
+    // Hủy pending recording (user cancel dialog)
+    fun discardPendingRecording() {
+        pendingRecording = null
+    }
+
+    // Get pending recording
+    fun getPendingRecording(): Recording? = pendingRecording
 
     // Ghi lại một nốt nhạc
     fun recordNote(noteId: Int, noteName: String) {

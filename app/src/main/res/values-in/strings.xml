@@ -113,5 +113,6 @@
     <string name="your_name_has_been_saved_to_my_nickname">Nama Anda telah disimpan ke Nama panggilan saya</string>
     <string name="length">Panjang:</string>
     <string name="nickname_already_exists">Nama panggilan ini sudah ada</string>
+    <string name="ok">Ok</string>
 
 </resources>
