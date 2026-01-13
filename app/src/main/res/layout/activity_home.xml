@@ -53,11 +53,13 @@
         />
 
     <!-- Button My Creation (Top - Full Width) -->
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btnPlayHome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         android:layout_marginHorizontal="15dp"
         app:layout_constraintTop_toTopOf="@id/frameHome"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,24 +74,32 @@
 
         <com.xylophone.core.custom.text.DoubleStrokeTextView
             android:id="@+id/tv1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:clipToOutline="false"
+            android:paddingHorizontal="10dp"
             android:layout_height="match_parent"
-            android:fontFamily="@font/sigmar_regular"
-            android:gravity="center"
-            android:text="@string/my_name"
-            android:textColor="@color/white"
-            android:textSize="38sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/chewy_regular"
+            android:text="@string/play"
+            android:textColor="#E45B17"
+            android:textSize="40sp"
+            android:layout_marginStart="30dp"
             android:ellipsize="marquee"
+            app:outerStrokeWidth="5dp"
+            app:outerStrokeColor="@color/white"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/glLeft"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
             android:scrollHorizontally="true"
             android:focusable="true"
             android:focusableInTouchMode="true" />
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Button My Creation (Top - Full Width) -->
-    <com.google.android.material.card.MaterialCardView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btnMyRecordHome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -111,21 +121,35 @@
 
         <com.xylophone.core.custom.text.DoubleStrokeTextView
             android:id="@+id/tv2"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:fontFamily="@font/sigmar_regular"
-            android:gravity="center"
-            android:text="@string/my_name"
-            android:textColor="@color/white"
+            android:text="@string/my_record"
+            android:textColor="#175BE4"
             android:textSize="38sp"
             android:textStyle="bold"
+            app:outerStrokeColor="@color/white"
+            app:outerStrokeWidth="5dp"
             android:ellipsize="marquee"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
             android:scrollHorizontally="true"
             android:focusable="true"
             android:focusableInTouchMode="true" />
-    </com.google.android.material.card.MaterialCardView>
+
+        <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4"
+            android:id="@+id/glLeft"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 

@@ -44,32 +44,6 @@ class MainActivity : BaseActivity<ActivityHomeBinding>() {
         val strokeColor = "#3E001C".toColorInt()
         val strokeWidth = 1f * resources.displayMetrics.density // Convert 1dp to pixels
 
-        binding.tv1.setDoubleStroke(
-            outerColor = strokeColor,
-            outerWidth = strokeWidth,
-            innerColor = Color.TRANSPARENT,
-            innerWidth = 0f,
-            join = Paint.Join.ROUND,
-            miter = 10f
-        )
-
-        binding.tv1.setDoubleStroke(
-            outerColor = strokeColor,
-            outerWidth = strokeWidth,
-            innerColor = Color.TRANSPARENT,
-            innerWidth = 0f,
-            join = Paint.Join.ROUND,
-            miter = 10f
-        )
-
-        binding.tv2.setDoubleStroke(
-            outerColor = strokeColor,
-            outerWidth = strokeWidth,
-            innerColor = Color.TRANSPARENT,
-            innerWidth = 0f,
-            join = Paint.Join.ROUND,
-            miter = 10f
-        )
 
         // Enable marquee effect for long text
         binding.tv1.isSelected = true
@@ -101,10 +75,8 @@ class MainActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun initActionBar() {
         binding.actionBar.apply {
-            imgHeadTitle.gone()
             btnActionBarRight.setImageResource(R.drawable.ic_settings)
             btnActionBarRight.visible()
-
         }
     }
 

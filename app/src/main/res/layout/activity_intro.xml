@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/img_bg_app"/>
+        android:src="@drawable/img_bg_permission"/>
 
     <!--    vpgTutorial-->
     <androidx.viewpager2.widget.ViewPager2
@@ -22,6 +22,7 @@
         android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@+id/btnNext"
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        app:dotsColor="#C2C2C2"
+        app:dotsColor="#FFFFFF"
         app:dotsCornerRadius="8dp"
         app:dotsSize="8dp"
         android:layout_marginStart="20dp"
@@ -42,7 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnNext"
         app:progressMode="false"
-        app:selectedDotColor="#ED5555" />
+        app:selectedDotColor="#80F4FF" />
 
     <!--    btnNext-->
     <TextView
@@ -51,11 +52,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="17dp"
         android:layout_marginBottom="90dp"
-        android:fontFamily="@font/roboto_medium"
+        android:fontFamily="@font/chewy_regular"
         android:padding="3dp"
         android:text="@string/next"
-        android:textColor="#ED5555"
-        android:textSize="17sp"
+        android:textColor="#80F4FF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

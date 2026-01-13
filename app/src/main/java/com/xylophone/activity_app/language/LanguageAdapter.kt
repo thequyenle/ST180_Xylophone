@@ -23,13 +23,11 @@ class LanguageAdapter(val context: Context) : BaseAdapter<LanguageModel, ItemLan
             tvLang.text = item.name
 
             if (item.activate) {
-                loadImageGlide(root, R.drawable.ic_tick_lang, btnRadio, false)
-                imvFocus.visible()
-                tvLang.setTextColor(context.getColor(R.color.white))  // ← Màu chữ khi CHỌN
+                langSelect.setBackgroundResource(R.drawable.bg_language_focus)
+
             } else {
-                loadImageGlide(root, R.drawable.ic_not_tick_lang, btnRadio, false)
-                imvFocus.gone()
-                tvLang.setTextColor(context.getColor(R.color.dark_purple))   // ← Màu chữ khi KHÔNG CHỌN
+                langSelect.setBackgroundResource(R.drawable.bg_language)
+
 
             }
 

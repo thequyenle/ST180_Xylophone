@@ -2,7 +2,7 @@ package com.xylophone.data.model
 
 object SongLibrary {
 
-    fun getAllSongs(): List<Song> {
+    fun getallSongs(): List<Song> {
         return listOf(
             // EASY SONGS
             Song(
@@ -81,10 +81,10 @@ object SongLibrary {
     }
 
     fun getSongById(id: String): Song? {
-        return getAllSongs().find { it.id == id }
+        return getallSongs().find { it.id == id }
     }
 
     fun getSongsByDifficulty(difficulty: Song.Difficulty): List<Song> {
-        return getAllSongs().filter { it.difficulty == difficulty }
+        return getallSongs().filter { it.difficulty == difficulty }
     }
 }

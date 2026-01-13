@@ -1,6 +1,7 @@
 package com.xylophone.activity_app.main
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -252,9 +253,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
 
             btnMusic.setOnSingleClick {
-                // Mở SongListActivity
-                val intent = android.content.Intent(this@PlayActivity, SongListActivity::class.java)
-                startActivity(intent)
+                Toast.makeText(this@PlayActivity, "Music button clicked!", Toast.LENGTH_SHORT).show()
+                try {
+                    val intent = Intent(this@PlayActivity, SongListActivity::class.java)
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(this@PlayActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    e.printStackTrace()
+                }
             }
         }
     }

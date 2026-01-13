@@ -4,28 +4,51 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.xylophone.R
 import com.xylophone.data.model.Song
 import com.xylophone.databinding.ItemSongBinding
 
 class SongAdapter(
     private var songs: List<Song>,
-    private val onSongClick: (Song) -> Unit
+    private val onSongClick: (Song?) -> Unit
 ) : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
+
+    private var selectedPosition: Int = RecyclerView.NO_POSITION
+
+    fun getSelectedSong(): Song? {
+        return if(selectedPosition in songs.indices) songs[selectedPosition] else null
+    }
 
     inner class SongViewHolder(private val binding: ItemSongBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(song: Song) {
+
+
+        fun bind(song: Song, isSelected: Boolean) {
             binding.apply {
                 tvSongName.text = song.name
-                tvSongDescription.text = song.description
-                tvNoteCount.text = "${song.getTotalNotes()} notes"
-                tvDifficulty.text = song.difficulty.displayName
-                tvDifficulty.setBackgroundColor(song.difficulty.color)
+
+                root.setBackgroundResource(
+                    if(isSelected) R.drawable.bg_btn_selected
+                    else R.drawable.bg_btn_unselected
+                )
 
                 root.setOnClickListener {
-                    onSongClick(song)
+                    val oldPos = selectedPosition
+                    val newPos = bindingAdapterPosition
+                    if(newPos == RecyclerView.NO_POSITION) return@setOnClickListener
+
+
+
+                    selectedPosition = newPos
+
+
+                    if(oldPos != RecyclerView.NO_POSITION) notifyItemChanged(oldPos)
+                    notifyItemChanged(newPos)
+                    onSongClick(getSelectedSong())
                 }
+
+
             }
         }
     }
@@ -40,13 +63,19 @@ class SongAdapter(
     }
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
-        holder.bind(songs[position])
+        holder.bind(
+
+            song = songs[position],
+            isSelected = position == selectedPosition
+            )
     }
 
     override fun getItemCount(): Int = songs.size
 
     fun updateSongs(newSongs: List<Song>) {
         songs = newSongs
+        selectedPosition = RecyclerView.NO_POSITION
         notifyDataSetChanged()
+        onSongClick(null)
     }
 }

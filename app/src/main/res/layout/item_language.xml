@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp">
+    android:layout_marginBottom="1dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
@@ -11,7 +11,7 @@
         app:cardBackgroundColor="@color/transparent"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="332:56"
+        app:layout_constraintDimensionRatio="332:70"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,18 +19,13 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_100_stroke_white" />
-        <!--        imvFocus-->
-        <ImageView
-            android:id="@+id/imvFocus"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_item_focus"
-            />
+             />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:id="@+id/langSelect"
+            android:background="@drawable/bg_language"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="328:56"
@@ -43,8 +38,8 @@
                 android:id="@+id/imvFlag"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginVertical="12dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginVertical="23dp"
+                android:layout_marginStart="26dp"
                 android:src="@drawable/ic_flag_english"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
@@ -57,27 +52,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:fontFamily="@font/roboto_regular"
+                android:fontFamily="@font/chewy_regular"
                 android:gravity="start"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@+id/imvFlag"
                 app:layout_constraintEnd_toStartOf="@+id/btnRadio"
                 app:layout_constraintStart_toEndOf="@+id/imvFlag"
                 app:layout_constraintTop_toTopOf="@+id/imvFlag" />
 
-            <!--            btnRadio-->
-            <ImageView
-                android:id="@+id/btnRadio"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginHorizontal="28dp"
-                android:layout_marginVertical="18dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:src="@drawable/ic_tick_lang"
-                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

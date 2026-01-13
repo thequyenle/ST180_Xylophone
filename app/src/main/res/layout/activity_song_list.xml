@@ -37,7 +37,7 @@
             android:padding="8dp">
 
             <com.xylophone.core.custom.text.DoubleStrokeTextView
-                android:id="@+id/btnFilterAll"
+                android:id="@+id/allSong"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.4"
@@ -52,7 +52,7 @@
 
             <com.xylophone.core.custom.text.DoubleStrokeTextView
                 android:layout_marginTop="6dp"
-                android:id="@+id/btnFilterAll"
+                android:id="@+id/myRecord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
@@ -71,22 +71,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:layout_marginTop="-2dp"
             android:clipToPadding="false"
             android:padding="8dp"
             android:background="@drawable/bg_song"
             tools:listitem="@layout/item_song" />
 
-        <!-- Empty State -->
-        <TextView
-            android:id="@+id/tvEmptyState"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="No songs available"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:visibility="gone" />
+
 
     </LinearLayout>
 

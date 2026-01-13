@@ -118,4 +118,6 @@
     <string name="ok">Ok</string>
     <string name="stop">Stop</string>
     <string name="choose_sound">Choose sound</string>
+    <string name="play">Play</string>
+    <string name="my_record">My Record</string>
 </resources>

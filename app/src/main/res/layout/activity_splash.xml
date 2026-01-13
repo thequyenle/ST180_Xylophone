@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:src="@drawable/img_app_name"
+        app:layout_constraintVertical_bias="0.25"
         app:layout_constraintBottom_toTopOf="@+id/gl05"
         app:layout_constraintTop_toTopOf="parent" />
 
