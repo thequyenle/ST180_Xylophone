@@ -71,41 +71,16 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
                 updateFilterUI()
             }
 
-            btnFilterEasy.setOnSingleClick {
-                currentFilter = Song.Difficulty.EASY
-                loadSongs(Song.Difficulty.EASY)
-                updateFilterUI()
-            }
 
-            btnFilterMedium.setOnSingleClick {
-                currentFilter = Song.Difficulty.MEDIUM
-                loadSongs(Song.Difficulty.MEDIUM)
-                updateFilterUI()
-            }
-
-            btnFilterHard.setOnSingleClick {
-                currentFilter = Song.Difficulty.HARD
-                loadSongs(Song.Difficulty.HARD)
-                updateFilterUI()
-            }
         }
     }
 
     private fun updateFilterUI() {
         binding.apply {
             // Reset all filters
-            btnFilterAll.alpha = 0.5f
-            btnFilterEasy.alpha = 0.5f
-            btnFilterMedium.alpha = 0.5f
-            btnFilterHard.alpha = 0.5f
 
             // Highlight selected filter
-            when (currentFilter) {
-                null -> btnFilterAll.alpha = 1.0f
-                Song.Difficulty.EASY -> btnFilterEasy.alpha = 1.0f
-                Song.Difficulty.MEDIUM -> btnFilterMedium.alpha = 1.0f
-                Song.Difficulty.HARD -> btnFilterHard.alpha = 1.0f
-            }
+
         }
     }
 

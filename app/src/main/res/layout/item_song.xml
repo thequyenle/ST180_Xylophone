@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-<androidx.cardview.widget.CardView
+<FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
+    android:layout_height="55dp"
+    android:layout_margin="0dp"
+    android:background="@drawable/bg_btn_selected"
     android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
@@ -17,15 +16,7 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <!-- Icon Music -->
-        <ImageView
-            android:id="@+id/ivMusicIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_music"
-            android:layout_gravity="center_vertical"
-            android:tint="@color/orange_F6"
-            android:contentDescription="Music Icon" />
+
 
         <!-- Song Info -->
         <LinearLayout
@@ -33,56 +24,32 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
+            android:clipChildren="false"
             android:layout_marginStart="16dp"
             android:layout_gravity="center_vertical">
 
             <TextView
+                android:clipToOutline="false"
                 android:id="@+id/tvSongName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="20sp"
+                android:fontFamily="@font/chewy_regular"
+                android:layout_gravity="center"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 tools:text="Twinkle Twinkle Little Star" />
 
-            <TextView
-                android:id="@+id/tvSongDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="12sp"
-                android:textColor="@android:color/darker_gray"
-                tools:text="Famous lullaby" />
 
-            <TextView
-                android:id="@+id/tvNoteCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="12sp"
-                android:textColor="@android:color/darker_gray"
-                tools:text="14 notes" />
+
+
 
         </LinearLayout>
 
-        <!-- Difficulty Badge -->
-        <TextView
-            android:id="@+id/tvDifficulty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:background="@drawable/bg_button_rounded"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            tools:text="EASY" />
+
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</FrameLayout>
 
 </layout>

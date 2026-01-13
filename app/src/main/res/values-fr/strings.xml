@@ -115,5 +115,6 @@
     <string name="nickname_already_exists">Ce pseudo existe déjà</string>
     <string name="ok">Ok</string>
     <string name="stop">Stop</string>
+    <string name="choose_sound">Choose sound</string>
 
 </resources>
