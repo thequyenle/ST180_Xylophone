@@ -3,30 +3,42 @@ package com.xylophone.activity_app.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.xylophone.R
 import com.xylophone.databinding.ItemRecordingBinding
 import com.xylophone.data.model.Recording
 
 class RecordingAdapter(
     private var recordings: List<Recording>,
-    private val onItemClick: (Recording) -> Unit,
-    private val onDeleteClick: (Recording) -> Unit
+    private val onItemClick: (Recording?) -> Unit
 ) : RecyclerView.Adapter<RecordingAdapter.RecordingViewHolder>() {
+
+    private var selectedPosition: Int = RecyclerView.NO_POSITION
+
+    fun getSelectedRecording(): Recording? {
+        return if(selectedPosition in recordings.indices) recordings[selectedPosition] else null
+    }
 
     inner class RecordingViewHolder(private val binding: ItemRecordingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(recording: Recording) {
+        fun bind(recording: Recording, isSelected: Boolean) {
             binding.apply {
                 tvRecordingName.text = recording.name
-                tvRecordingDuration.text = formatDuration(recording.duration)
-                tvRecordingNotes.text = "${recording.notes.size} notes"
+
+                root.setBackgroundResource(
+                    if(isSelected) R.drawable.bg_btn_selected
+                    else R.drawable.bg_btn_unselected
+                )
 
                 root.setOnClickListener {
+                    val oldPos = selectedPosition
+                    val newPos = bindingAdapterPosition
+                    if(newPos == RecyclerView.NO_POSITION) return@setOnClickListener
                     onItemClick(recording)
-                }
-
-                btnDelete.setOnClickListener {
-                    onDeleteClick(recording)
+                    selectedPosition = newPos
+                    if(oldPos!= RecyclerView.NO_POSITION) notifyItemChanged(oldPos)
+                    notifyItemChanged(newPos)
+                    onItemClick(getSelectedRecording())
                 }
             }
         }
@@ -48,13 +60,15 @@ class RecordingAdapter(
     }
 
     override fun onBindViewHolder(holder: RecordingViewHolder, position: Int) {
-        holder.bind(recordings[position])
+        holder.bind(recordings[position], isSelected = position==selectedPosition)
     }
 
     override fun getItemCount() = recordings.size
 
     fun updateRecordings(newRecordings: List<Recording>) {
         recordings = newRecordings
+        selectedPosition = RecyclerView.NO_POSITION
         notifyDataSetChanged()
+        onItemClick(null)
     }
 }

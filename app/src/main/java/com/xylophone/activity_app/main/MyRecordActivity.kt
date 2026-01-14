@@ -31,14 +31,10 @@ class MyRecordActivity : BaseActivity<ActivityMyRecordBinding>() {
             onItemClick = { recording ->
                 // Mở PlayActivity với recording ID để playback
                 val intent = Intent(this, PlayActivity::class.java)
-                intent.putExtra("recording_id", recording.id)
+                intent.putExtra("recording_id", recording?.id)
                 startActivity(intent)
             },
-            onDeleteClick = { recording ->
-                // Xóa recording
-                RecordingManager.deleteRecording(this, recording.id)
-                loadRecordings()
-            }
+
         )
 
         binding.recyclerViewRecordings.apply {

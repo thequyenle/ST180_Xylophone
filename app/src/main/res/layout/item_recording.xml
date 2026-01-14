@@ -1,65 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_home"
-            android:tint="@color/white" />
+        android:layout_height="55dp"
+        android:layout_margin="0dp"
+        android:background="@drawable/bg_btn_selected"
+        android:foreground="?attr/selectableItemBackground">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvRecordingName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="My Recording 1"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvRecordingDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="00:30"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tvRecordingNotes"
-                android:layout_width="wrap_content"
+            <!-- Song Info -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="10 notes"
-                android:textColor="@android:color/white"
-                android:textSize="12sp" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:clipChildren="false"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:clipToOutline="false"
+                    android:id="@+id/tvRecordingName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/chewy_regular"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    tools:text="Twinkle Twinkle Little Star" />
+
+
+
+
+
+            </LinearLayout>
+
+
+
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/btnDelete"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_back"
-            android:layout_gravity="center_vertical"
-            android:tint="@android:color/white" />
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+</layout>

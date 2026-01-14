@@ -57,7 +57,7 @@ enum class Instrument(
     }
 
     companion object {
-        fun fromName(name: String): Instrument {
+        fun fromName(name: String?): Instrument {
             return values().find { it.name == name } ?: PIANO
         }
     }

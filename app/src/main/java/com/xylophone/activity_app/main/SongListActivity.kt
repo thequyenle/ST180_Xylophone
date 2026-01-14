@@ -13,8 +13,11 @@ import com.xylophone.core.base.BaseActivity
 import com.xylophone.core.custom.text.DoubleStrokeTextView
 import com.xylophone.core.extensions.gone
 import com.xylophone.core.extensions.handleBackLeftToRight
+import com.xylophone.core.extensions.invisible
 import com.xylophone.core.extensions.setOnSingleClick
 import com.xylophone.core.extensions.visible
+import com.xylophone.core.helper.RecordingManager
+import com.xylophone.data.model.Recording
 import com.xylophone.data.model.Song
 import com.xylophone.data.model.SongLibrary
 import com.xylophone.databinding.ActivitySongListBinding
@@ -25,7 +28,11 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
     private fun dp(dp: Float): Float = dp * resources.displayMetrics.density
 
     private var selectedSong: Song? = null
+    private var selectedRecording: Recording? =null
     private lateinit var songAdapter: SongAdapter
+
+    private lateinit var recordingAdapter: RecordingAdapter
+
     private var currentFilter: Song.Difficulty? = null
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
@@ -70,6 +77,11 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
             songs = emptyList(),
             onSongClick = { song ->
                 selectedSong = song
+                if(song !=null){
+                    binding.actionBar.btnActionBarRight.visible()
+                }else{
+                    binding.actionBar.btnActionBarRight.invisible()
+                }
             }
         )
 
@@ -77,6 +89,38 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
             layoutManager = LinearLayoutManager(this@SongListActivity)
             adapter = songAdapter
         }
+    }
+
+    private fun setupRecordingRecyclerView(){
+        recordingAdapter = RecordingAdapter(recordings = emptyList(),
+            onItemClick = {recording ->
+                selectedRecording = recording
+                if(recording !=null){
+                    binding.actionBar.btnActionBarRight.visible()
+                }else{
+                    binding.actionBar.btnActionBarRight.gone()
+                }
+
+            }
+        )
+
+        binding.recyclerViewSongs.apply {
+            layoutManager = LinearLayoutManager(this@SongListActivity)
+            adapter = recordingAdapter
+        }
+
+    }
+
+    private fun loadRecordings(){
+        val recordings = RecordingManager.getAllRecordings(this)
+
+        if(recordings.isEmpty()) {
+            binding.recyclerViewSongs.isVisible = false
+        }else{
+            binding.recyclerViewSongs.isVisible = true
+            recordingAdapter.updateRecordings(recordings)
+        }
+
     }
 
     private fun loadSongs(difficulty: Song.Difficulty? = null) {
@@ -133,11 +177,22 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
                 handleBackLeftToRight()
             }
             actionBar.btnActionBarRight.setOnSingleClick {
+                if(binding.recyclerViewSongs.adapter == songAdapter){
                 selectedSong?.let { song ->
                     val intent = Intent(this@SongListActivity, PlayActivity::class.java)
                     intent.putExtra("mode", "LEARNING_MODE")
                     intent.putExtra("song_id", song.id)
                     startActivity(intent)
+                }
+                }
+                else{
+                    selectedRecording?.let{ recording ->
+                        val intent =Intent(this@SongListActivity, PlayActivity::class.java)
+                        intent.putExtra("mode","PLAYBACK_MODE")
+                        intent.putExtra("recording_id",recording.id)
+                        startActivity(intent)
+
+                    }
                 }
             }
         }
@@ -148,15 +203,21 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
     }
 
     private fun selecTab(isSongTab: Boolean){
+
+        binding.actionBar.btnActionBarRight.invisible()
+
         if(isSongTab) {
             binding.tabMode.setBackgroundResource(R.drawable.tab_selected_song)
             applySelectedTab(binding.allSong)
             applyUnselectedTab(binding.myRecord)
+            binding.recyclerViewSongs.adapter = songAdapter
             loadSongs()
         }else{
             binding.tabMode.setBackgroundResource(R.drawable.tab_selected_record)
             applySelectedTab(binding.myRecord)
             applyUnselectedTab(binding.allSong)
+            setupRecordingRecyclerView()
+            loadRecordings()
 
         }
     }
@@ -221,7 +282,7 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
             btnActionBarLeft.visible()
             btnActionBarRightText.gone()
             btnActionBarRight.setImageResource(R.drawable.ic_done)
-            btnActionBarRight.visible()
+
         }
     }
 }
