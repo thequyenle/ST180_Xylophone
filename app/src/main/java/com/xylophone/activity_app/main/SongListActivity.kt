@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.xylophone.R
 import com.xylophone.core.base.BaseActivity
 import com.xylophone.core.custom.text.DoubleStrokeTextView
+import com.xylophone.core.extensions.gone
 import com.xylophone.core.extensions.handleBackLeftToRight
 import com.xylophone.core.extensions.setOnSingleClick
 import com.xylophone.core.extensions.visible
@@ -69,10 +70,6 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
             songs = emptyList(),
             onSongClick = { song ->
                 selectedSong = song
-                val intent = Intent(this, PlayActivity::class.java)
-                intent.putExtra("mode", "LEARNING_MODE")
-                intent.putExtra("song_id", song?.id)
-                startActivity(intent)
             }
         )
 
@@ -134,6 +131,14 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
         binding.apply {
             actionBar.btnActionBarLeft.setOnSingleClick {
                 handleBackLeftToRight()
+            }
+            actionBar.btnActionBarRight.setOnSingleClick {
+                selectedSong?.let { song ->
+                    val intent = Intent(this@SongListActivity, PlayActivity::class.java)
+                    intent.putExtra("mode", "LEARNING_MODE")
+                    intent.putExtra("song_id", song.id)
+                    startActivity(intent)
+                }
             }
         }
     }
@@ -214,6 +219,9 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
             tvCenter.visible()
             btnActionBarLeft.setImageResource(R.drawable.ic_back)
             btnActionBarLeft.visible()
+            btnActionBarRightText.gone()
+            btnActionBarRight.setImageResource(R.drawable.ic_done)
+            btnActionBarRight.visible()
         }
     }
 }
