@@ -18,6 +18,7 @@ import com.xylophone.core.extensions.invisible
 import com.xylophone.core.extensions.setOnSingleClick
 import com.xylophone.core.extensions.shakeViewEffect
 import com.xylophone.core.extensions.visible
+import com.xylophone.core.helper.NoteIconManager
 import com.xylophone.core.helper.RecordingManager
 import com.xylophone.core.helper.SharePreferenceHelper
 import com.xylophone.core.helper.SoundHelper
@@ -34,6 +35,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private val lastPlayedButtonMap = mutableMapOf<Int, ImageView?>()
     private val buttonSoundMap = mutableMapOf<ImageView, Int>()
     private val buttonNameMap = mutableMapOf<ImageView, String>()
+
+    // Note icon overlay manager
+    private lateinit var noteIconManager: NoteIconManager
 
     // Recording
     private val timerHandler = Handler(Looper.getMainLooper())
@@ -84,6 +88,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         setupRecordingUI()
         checkPlaybackMode()
         checkLearningMode()
+
+        // Initialize note icon overlay manager
+        noteIconManager = NoteIconManager(this, binding.overlayContainer)
     }
 
     private fun loadSounds() {
@@ -164,12 +171,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     // Một ngón tay được nhấc lên (còn ngón khác)
                     val pointerIndex = event.actionIndex
                     val pointerId = event.getPointerId(pointerIndex)
+
                     lastPlayedButtonMap.remove(pointerId)
                     true
                 }
                 MotionEvent.ACTION_UP,
                 MotionEvent.ACTION_CANCEL -> {
                     // Ngón tay cuối cùng nhấc lên hoặc bị cancel
+
                     lastPlayedButtonMap.clear()
                     false // Cho phép click event hoạt động
                 }
@@ -217,12 +226,17 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     playNoteSound(foundSoundId!!)
                     animateButton(foundButton!!)
                 }
+
+                // Show note icon overlay
+                noteIconManager.showIcon(pointerId, foundButton!!)
+
                 lastPlayedButtonMap[pointerId] = foundButton
             }
             // Nếu cùng button → không phát lại (giữ nguyên)
         } else {
             // FIX: Nếu swipe ra ngoài (không chạm button nào), reset tracking
             // Điều này cho phép user swipe lại vào button cũ và vẫn phát âm
+
             lastPlayedButtonMap[pointerId] = null
         }
     }

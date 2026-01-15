@@ -300,5 +300,16 @@
         app:layout_constraintBottom_toBottomOf="@id/frameMusic"
         />
 
+    <!-- Musical note overlay container - positioned on top of all buttons -->
+    <FrameLayout
+        android:id="@+id/overlayContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintStart_toStartOf="@id/frameMusic"
+        app:layout_constraintEnd_toEndOf="@id/frameMusic"
+        app:layout_constraintTop_toTopOf="@id/frameMusic"
+        app:layout_constraintBottom_toBottomOf="@id/frameMusic"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

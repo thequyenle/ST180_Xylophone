@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Musical eighth note - child-friendly design -->
+    <!-- Note head (bottom circle) -->
+    <path
+        android:pathData="M18,32 A6,6 0 1,0 18,44 A6,6 0 1,0 18,32 Z"
+        android:fillColor="#FF6B35"/>
+
+    <!-- Note stem -->
+    <path
+        android:pathData="M23,10 L23,38 L26,38 L26,10 Z"
+        android:fillColor="#FF6B35"/>
+
+    <!-- Note flag (eighth note flag) -->
+    <path
+        android:pathData="M26,10 Q36,12 36,20 Q36,16 26,18 Z"
+        android:fillColor="#FF6B35"/>
+
+    <!-- White stroke outline for visibility -->
+    <path
+        android:pathData="M18,32 A6,6 0 1,0 18,44 A6,6 0 1,0 18,32 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"/>
+
+    <path
+        android:pathData="M23,10 L23,38 L26,38 L26,10 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"/>
+
+    <path
+        android:pathData="M26,10 Q36,12 36,20 Q36,16 26,18 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:fillColor="@android:color/transparent"/>
+</vector>
