@@ -147,7 +147,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>() {
     private fun createColoredText(
         @androidx.annotation.StringRes textRes: Int,
         @androidx.annotation.ColorRes colorRes: Int,
-        font: Int = R.font.roboto_regular
+        font: Int = R.font.chewy_regular
     ) = StringHelper.changeColor(this, getString(textRes), colorRes, font)
 
     private fun handleContinue() {

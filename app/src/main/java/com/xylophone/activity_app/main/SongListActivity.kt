@@ -42,17 +42,17 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(this, "SongListActivity onResume", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "SongListActivity onResume", Toast.LENGTH_SHORT).show()
     }
 
     override fun onPause() {
         super.onPause()
-        Toast.makeText(this, "SongListActivity onPause", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "SongListActivity onPause", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Toast.makeText(this, "SongListActivity onDestroy", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "SongListActivity onDestroy", Toast.LENGTH_SHORT).show()
     }
 
     override fun setViewBinding(): ActivitySongListBinding {
@@ -60,12 +60,12 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
     }
 
     override fun initView() {
-        Toast.makeText(this, "SongListActivity starting", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, "SongListActivity starting", Toast.LENGTH_SHORT).show()
         try {
             setupRecyclerView()
             loadSongs()
             setupFilters()
-            Toast.makeText(this, "SongListActivity initialized", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "SongListActivity initialized", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Error in initView: ${e.message}", Toast.LENGTH_LONG).show()
             e.printStackTrace()

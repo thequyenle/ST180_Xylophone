@@ -27,8 +27,8 @@ class RecordingAdapter(
                 tvRecordingName.text = recording.name
 
                 root.setBackgroundResource(
-                    if(isSelected) R.drawable.bg_btn_selected
-                    else R.drawable.bg_btn_unselected
+                    if(isSelected) R.drawable.bg_btn_selected_recording
+                    else R.drawable.bg_btn_unselected_recording
                 )
 
                 root.setOnClickListener {

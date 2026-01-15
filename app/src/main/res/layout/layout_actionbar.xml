@@ -51,7 +51,7 @@
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:visibility="gone"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/btnActionBarLeft"
         app:layout_constraintEnd_toStartOf="@+id/btnActionBarRight"
         app:layout_constraintStart_toEndOf="@+id/btnActionBarLeft"

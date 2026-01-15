@@ -37,7 +37,6 @@
         app:dotsSize="8dp"
         android:layout_marginStart="20dp"
         app:dotsSpacing="3dp"
-        android:layout_marginTop="-50dp"
         app:dotsWidthFactor="2.5"
         app:layout_constraintBottom_toBottomOf="@+id/btnNext"
         app:layout_constraintStart_toStartOf="parent"

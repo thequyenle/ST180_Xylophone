@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import com.xylophone.R
 import com.xylophone.core.base.BaseActivity
 import com.xylophone.core.extensions.animateScaleEffect
+import com.xylophone.core.extensions.gone
 import com.xylophone.core.extensions.handleBackLeftToRight
 import com.xylophone.core.extensions.invisible
 import com.xylophone.core.extensions.setOnSingleClick
@@ -35,6 +36,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private val lastPlayedButtonMap = mutableMapOf<Int, ImageView?>()
     private val buttonSoundMap = mutableMapOf<ImageView, Int>()
     private val buttonNameMap = mutableMapOf<ImageView, String>()
+
+
+
+    private var sunJumpAnimator: android.animation.ValueAnimator? = null
 
     // Note icon overlay manager
     private lateinit var noteIconManager: NoteIconManager
@@ -111,6 +116,90 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
         }
     }
+
+    private fun jumpSunToButton(targetButton: ImageView) {
+        val sun = binding.imgSunGuide
+
+        // Nếu chưa hiện thì hiện lên (learning mode)
+        if (!sun.isVisible) sun.visible()
+
+        // Tính vị trí button so với overlayContainer
+        val buttonLocation = IntArray(2)
+        val containerLocation = IntArray(2)
+        targetButton.getLocationOnScreen(buttonLocation)
+        binding.overlayContainer.getLocationOnScreen(containerLocation)
+
+        val relativeX = buttonLocation[0] - containerLocation[0]
+        val relativeY = buttonLocation[1] - containerLocation[1]
+
+        // Target: đặt sun ở gần "đầu" nốt (trên một chút cho dễ nhìn)
+        val targetX = relativeX + (targetButton.width / 2f) - (sun.width / 2f)
+        val targetY = relativeY - (sun.height * 0.35f) // nhích lên trên cho giống đang chỉ vào nốt
+
+        // Cancel animation cũ (để nhảy được liên tục, kể cả nốt lặp lại)
+        sun.animate().cancel()
+        sunJumpAnimator?.cancel()
+
+        // Nếu lần đầu (chưa có vị trí), đặt thẳng tới target để khỏi bay từ (0,0)
+        if (sun.x == 0f && sun.y == 0f) {
+            sun.x = targetX
+            sun.y = targetY
+        }
+
+        val startX = sun.x
+        val startY = sun.y
+        val dx = targetX - startX
+        val dy = targetY - startY
+
+        // Jump height (px) - trẻ con nhìn rõ
+        val jumpHeight = 70f * resources.displayMetrics.density
+
+        // Nếu target gần như trùng (nốt lặp lại), vẫn nhảy tại chỗ
+        val needOnlyJump = kotlin.math.abs(dx) < 2f && kotlin.math.abs(dy) < 2f
+
+        val duration = 650L
+
+        // Tạo “nhảy theo parabol”: y = linear - 4h*t(1-t)
+        val anim = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
+            this.duration = duration
+            interpolator = android.view.animation.AccelerateDecelerateInterpolator()
+
+            addUpdateListener { va ->
+                val t = va.animatedValue as Float
+
+                val newX = if (needOnlyJump) startX else (startX + dx * t)
+                val newY = (startY + (if (needOnlyJump) 0f else dy) * t) - (4f * jumpHeight * t * (1f - t))
+
+                sun.x = newX
+                sun.y = newY
+
+                // Tí “nhún” scale cho dễ thương
+                val s = 1f + 0.12f * kotlin.math.sin(t * Math.PI).toFloat()
+                sun.scaleX = s
+                sun.scaleY = s
+            }
+
+            addListener(object : android.animation.AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: android.animation.Animator) {
+                    // Đặt đúng vào đích (tránh sai số)
+                    sun.x = targetX
+                    sun.y = targetY
+
+                    // “Bounce” nhẹ lúc đáp
+                    sun.animate()
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .setDuration(180)
+                        .setInterpolator(android.view.animation.OvershootInterpolator(1.2f))
+                        .start()
+                }
+            })
+        }
+
+        sunJumpAnimator = anim
+        anim.start()
+    }
+
 
     private fun setupButtonMap() {
         binding.apply {
@@ -417,6 +506,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             updateInstrumentUI()
             idMusic.setText(R.string.music)
         }
+        binding.imgSunGuide.gone()
+        sunJumpAnimator?.cancel()
+        sunJumpAnimator = null
+
 
         setupRecordingUI()
     }
@@ -637,6 +730,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         buttonToHighlight?.let { button ->
             highlightedButton = button
+
             // Phóng to và làm nổi bật
             button.scaleX = 1.2f
             button.scaleY = 1.2f
@@ -644,7 +738,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
             // Pulse animation liên tục
             startPulseAnimation(button)
+
+            // ✅ Sun nhảy tới đúng nốt (kể cả nốt lặp lại)
+            // chạy sau 1 frame để sun có width/height ổn định
+            binding.overlayContainer.post {
+                jumpSunToButton(button)
+            }
         }
+
     }
 
     // Animation pulse liên tục cho button được highlight
@@ -692,6 +793,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             img3.isEnabled = true
             updateInstrumentUI()
         }
+        binding.imgSunGuide.gone()
+        sunJumpAnimator?.cancel()
+        sunJumpAnimator = null
+
 
         // Launch SuccessActivity
         val intent = Intent(this, SuccessActivity::class.java)

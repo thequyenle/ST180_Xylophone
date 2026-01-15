@@ -43,7 +43,7 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>() {
         lifecycleScope.launch {
             viewModel.isFirstLanguage.collect { isFirst ->
                 if (isFirst) {
-                    binding.actionBar.tvCenter.visible()
+                    binding.actionBar.tvStart.visible()
                 } else {
                     binding.actionBar.btnActionBarLeft.visible()
                     binding.actionBar.tvCenter.visible()
@@ -78,10 +78,20 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>() {
     }
 
     override fun initActionBar() {
+
+        if (viewModel.isFirstLanguage.value) {
+            val p = (8 * resources.displayMetrics.density).toInt() // 6dp
+            binding.actionBar.btnActionBarRight.setPadding(p, p, p, p)
+            binding.actionBar.btnActionBarRight.setImageResource(R.drawable.ic_done)
+            binding.actionBar.btnActionBarRight.translationY =
+                (8 * resources.displayMetrics.density) // 2dp
+        } else {
+            binding.actionBar.btnActionBarRight.setImageResource(R.drawable.ic_save)
+        }
+
         binding.actionBar.apply {
 
             btnActionBarLeft.setImageResource(R.drawable.ic_back)
-            btnActionBarRight.setImageResource(R.drawable.ic_done)
             val text = R.string.language
             tvCenter.text = strings(text)
             tvStart.text = strings(text)
@@ -117,7 +127,6 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>() {
             startIntentRightToLeft(IntroActivity::class.java)
             finishAffinity()
         } else {
-            binding.actionBar.btnActionBarRight.setImageResource(R.drawable.ic_save)
 
             startIntentWithClearTop(MainActivity::class.java)
         }

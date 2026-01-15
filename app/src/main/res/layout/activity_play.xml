@@ -307,9 +307,19 @@
         android:layout_height="0dp"
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:layout_constraintStart_toStartOf="@id/frameMusic"
-        app:layout_constraintEnd_toEndOf="@id/frameMusic"
-        app:layout_constraintTop_toTopOf="@id/frameMusic"
-        app:layout_constraintBottom_toBottomOf="@id/frameMusic"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <!-- Sun guide icon (learning mode) -->
+        <ImageView
+            android:id="@+id/imgSunGuide"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/sun"
+            android:visibility="gone"
+            android:elevation="30dp"
+            android:scaleType="fitCenter" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
