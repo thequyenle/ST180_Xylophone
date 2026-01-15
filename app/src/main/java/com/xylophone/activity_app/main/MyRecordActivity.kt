@@ -1,10 +1,14 @@
 package com.xylophone.activity_app.main
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.xylophone.R
+import com.xylophone.core.SwipeToDeleteCallback
 import com.xylophone.core.base.BaseActivity
 import com.xylophone.core.extensions.handleBackLeftToRight
 import com.xylophone.core.extensions.setOnSingleClick
@@ -15,6 +19,7 @@ import com.xylophone.databinding.ActivityMyRecordBinding
 class MyRecordActivity : BaseActivity<ActivityMyRecordBinding>() {
 
     private lateinit var recordingAdapter: RecordingAdapter
+    private var swipeCallback: SwipeToDeleteCallback? = null
 
     override fun setViewBinding(): ActivityMyRecordBinding {
         return ActivityMyRecordBinding.inflate(LayoutInflater.from(this))
@@ -22,12 +27,102 @@ class MyRecordActivity : BaseActivity<ActivityMyRecordBinding>() {
 
     override fun initView() {
         setupRecyclerView()
+        setupSwipeToDelete()
         loadRecordings()
     }
 
+    private fun setupSwipeToDelete() {
+        swipeCallback = object : SwipeToDeleteCallback() {}
+
+        val itemTouchHelper = ItemTouchHelper(swipeCallback!!)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerViewRecordings)
+
+        binding.recyclerViewRecordings.addOnItemTouchListener(
+            object : RecyclerView.SimpleOnItemTouchListener() {
+                private var downX = 0f
+                private var downY = 0f
+
+                override fun onInterceptTouchEvent(rv: RecyclerView, e: android.view.MotionEvent): Boolean {
+                    val swipedPos = swipeCallback?.getSwipedPosition() ?: RecyclerView.NO_POSITION
+
+                    when (e.action) {
+                        android.view.MotionEvent.ACTION_DOWN -> {
+                            downX = e.x
+                            downY = e.y
+                            Log.d("MyRecordActivity", "ACTION_DOWN: swipedPos=$swipedPos")
+                        }
+                    }
+
+                    // Only intercept if there's a swiped item
+                    val shouldIntercept = swipedPos != RecyclerView.NO_POSITION
+                    Log.d("MyRecordActivity", "onInterceptTouchEvent: action=${e.action}, swipedPos=$swipedPos, shouldIntercept=$shouldIntercept")
+                    return shouldIntercept
+                }
+
+                override fun onTouchEvent(rv: RecyclerView, e: android.view.MotionEvent) {
+                    when (e.action) {
+                        android.view.MotionEvent.ACTION_UP -> {
+                            Log.d("MyRecordActivity", "ACTION_UP at (${e.x}, ${e.y}), rawX=${e.rawX}, rawY=${e.rawY}")
+
+                            val swipedPos = swipeCallback?.getSwipedPosition() ?: RecyclerView.NO_POSITION
+                            if (swipedPos == RecyclerView.NO_POSITION) {
+                                Log.d("MyRecordActivity", "No swiped position")
+                                return
+                            }
+
+                            // Find the view holder at the swiped position
+                            val viewHolder = rv.findViewHolderForAdapterPosition(swipedPos)
+                            if (viewHolder == null) {
+                                Log.d("MyRecordActivity", "ViewHolder not found for position $swipedPos")
+                                return
+                            }
+
+                            val child = viewHolder.itemView
+                            Log.d("MyRecordActivity", "Found swiped item at position $swipedPos")
+
+                            // This item is swiped open, check if tapping delete button
+                            val bounds = swipeCallback?.getDeleteButtonBounds()
+                            Log.d("MyRecordActivity", "Bounds: $bounds")
+
+                            if (bounds != null) {
+                                // Get RecyclerView location on screen
+                                val rvLoc = IntArray(2)
+                                rv.getLocationOnScreen(rvLoc)
+
+                                // Calculate tap coordinates relative to RecyclerView (bounds are in RV coords)
+                                val tapXInRv = e.rawX.toInt() - rvLoc[0]
+                                val tapYInRv = e.rawY.toInt() - rvLoc[1]
+
+                                Log.d("MyRecordActivity", "RV location: (${rvLoc[0]}, ${rvLoc[1]})")
+                                Log.d("MyRecordActivity", "Raw tap: (${e.rawX.toInt()}, ${e.rawY.toInt()})")
+                                Log.d("MyRecordActivity", "Tap in RV coords: ($tapXInRv, $tapYInRv)")
+                                Log.d("MyRecordActivity", "Bounds: $bounds")
+
+                                if (bounds.contains(tapXInRv, tapYInRv)) {
+                                    // Tap hit delete icon → delete the item immediately
+                                    Log.d("MyRecordActivity", "DELETE ICON TAPPED!")
+                                    val item = recordingAdapter.getItemAt(swipedPos)
+                                    if (item != null) {
+                                        RecordingManager.deleteRecording(this@MyRecordActivity, item.id)
+                                        loadRecordings()
+                                    }
+                                } else {
+                                    // Tap missed delete icon → close the swipe
+                                    Log.d("MyRecordActivity", "Tap missed delete, closing swipe")
+                                    swipeCallback?.closeSwipe(rv)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+
     private fun setupRecyclerView() {
         recordingAdapter = RecordingAdapter(
-            recordings = emptyList(),
+            recordings = mutableListOf(),
             onItemClick = { recording ->
                 // Mở PlayActivity với recording ID để playback
                 val intent = Intent(this, PlayActivity::class.java)
@@ -44,15 +139,18 @@ class MyRecordActivity : BaseActivity<ActivityMyRecordBinding>() {
     }
 
     private fun loadRecordings() {
+        // Close any open swipe before reloading
+        swipeCallback?.closeSwipe(binding.recyclerViewRecordings)
+
         val recordings = RecordingManager.getAllRecordings(this)
 
         if (recordings.isEmpty()) {
-            binding.tvMessage.isVisible = true
+            binding.layoutNoItem.isVisible = true
             binding.recyclerViewRecordings.isVisible = false
         } else {
-            binding.tvMessage.isVisible = false
+            binding.layoutNoItem.isVisible = false
             binding.recyclerViewRecordings.isVisible = true
-            recordingAdapter.updateRecordings(recordings)
+            recordingAdapter.updateRecordings(recordings.toMutableList())
         }
     }
 
@@ -70,7 +168,7 @@ class MyRecordActivity : BaseActivity<ActivityMyRecordBinding>() {
 
     override fun initActionBar() {
         binding.actionBar.apply {
-            tvCenter.text = "My Record"
+            tvCenter.text = getString(R.string.my_record_title)
             tvCenter.visible()
             btnActionBarLeft.setImageResource(R.drawable.ic_back)
             btnActionBarLeft.visible()

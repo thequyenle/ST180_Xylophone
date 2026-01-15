@@ -92,7 +92,7 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
     }
 
     private fun setupRecordingRecyclerView(){
-        recordingAdapter = RecordingAdapter(recordings = emptyList(),
+        recordingAdapter = RecordingAdapter(recordings = mutableListOf(),
             onItemClick = {recording ->
                 selectedRecording = recording
                 if(recording !=null){
@@ -115,10 +115,12 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
         val recordings = RecordingManager.getAllRecordings(this)
 
         if(recordings.isEmpty()) {
+            binding.layoutNoItem.visible()
             binding.recyclerViewSongs.isVisible = false
         }else{
+            binding.layoutNoItem.gone()
             binding.recyclerViewSongs.isVisible = true
-            recordingAdapter.updateRecordings(recordings)
+            recordingAdapter.updateRecordings(recordings.toMutableList())
         }
 
     }
@@ -134,6 +136,7 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
 
             binding.recyclerViewSongs.isVisible = false
         } else {
+            binding.layoutNoItem.gone()
 
             binding.recyclerViewSongs.isVisible = true
             songAdapter.updateSongs(songs)

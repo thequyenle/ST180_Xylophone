@@ -11,8 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
-            android:background="@drawable/bg_16_stroke_gradient_solid_black">
-
+>
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imvAvtRate"
                 android:layout_width="72dp"
@@ -98,7 +97,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:background="@drawable/bg_gradient"
+                        android:background="@color/splash"
                         android:fontFamily="@font/roboto_medium"
                         android:gravity="center"
                         android:text="@string/rate"
@@ -116,7 +115,7 @@
                     android:paddingVertical="15dp"
                     android:text="@string/exit"
                     android:textAllCaps="false"
-                    android:textColor="#FF5959"
+                    android:textColor="@color/splash"
                     android:textSize="16sp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="3dp"
         android:paddingHorizontal="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutActionBar">
@@ -44,7 +44,7 @@
             <LinearLayout
                 android:id="@+id/btnLang"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="63dp"
                 android:background="@drawable/bg_settings"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -57,8 +57,8 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginVertical="17dp"
                         android:src="@drawable/ic_lang_set" />
@@ -69,23 +69,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_weight="8"
-                    android:fontFamily="@font/roboto_regular"
+                    android:fontFamily="@font/londrinasolid_regular"
                     android:gravity="center_vertical"
                     android:text="@string/language"
-                    android:textColor="@color/dark_purple"
-                    android:textSize="16sp" />
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:src="@drawable/ic_more_set" />
-                </FrameLayout>
 
             </LinearLayout>
 
@@ -93,8 +83,8 @@
             <LinearLayout
                 android:id="@+id/btnRate"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="63dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/bg_settings"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -107,8 +97,8 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginVertical="17dp"
                         android:src="@drawable/ic_rate_set" />
@@ -119,31 +109,21 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_weight="8"
-                    android:fontFamily="@font/roboto_regular"
+                    android:fontFamily="@font/londrinasolid_regular"
                     android:gravity="center_vertical"
                     android:text="@string/rate_us"
-                    android:textColor="@color/dark_purple"
-                    android:textSize="16sp" />
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:src="@drawable/ic_more_set" />
-                </FrameLayout>
             </LinearLayout>
 
             <!--            btnShare-->
             <LinearLayout
                 android:id="@+id/btnShare"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="63dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/bg_settings"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -156,8 +136,8 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginVertical="17dp"
                         android:src="@drawable/ic_share_set" />
@@ -168,31 +148,21 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_weight="8"
-                    android:fontFamily="@font/roboto_regular"
+                    android:fontFamily="@font/londrinasolid_regular"
                     android:gravity="center_vertical"
                     android:text="@string/share_app"
-                    android:textColor="@color/dark_purple"
-                    android:textSize="16sp" />
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:src="@drawable/ic_more_set" />
-                </FrameLayout>
             </LinearLayout>
 
             <!--            btnPolicy-->
             <LinearLayout
                 android:id="@+id/btnPolicy"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="63dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/bg_settings"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -205,11 +175,11 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginVertical="17dp"
-                        android:src="@drawable/ic_policy_set" />
+                        android:src="@drawable/ic_policy" />
                 </FrameLayout>
 
                 <TextView
@@ -217,23 +187,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_weight="8"
-                    android:fontFamily="@font/roboto_regular"
+                    android:fontFamily="@font/londrinasolid_regular"
                     android:gravity="center_vertical"
                     android:text="@string/privacy_policy"
-                    android:textColor="@color/dark_purple"
-                    android:textSize="16sp" />
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:src="@drawable/ic_more_set" />
-                </FrameLayout>
             </LinearLayout>
 
 

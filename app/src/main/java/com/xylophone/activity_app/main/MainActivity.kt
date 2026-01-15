@@ -3,6 +3,7 @@ package com.xylophone.activity_app.main
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import com.xylophone.databinding.ActivityHomeBinding
 import com.xylophone.activity_app.SettingsActivity
 
 import com.xylophone.core.extensions.gone
+import com.xylophone.core.extensions.setGradientTextHeightColor
 import com.xylophone.core.extensions.setOnSingleClick
 import com.xylophone.core.extensions.strings
 import kotlinx.coroutines.Dispatchers
@@ -41,10 +43,6 @@ class MainActivity : BaseActivity<ActivityHomeBinding>() {
     }
 
     private fun setupTextStroke() {
-        val strokeColor = "#3E001C".toColorInt()
-        val strokeWidth = 1f * resources.displayMetrics.density // Convert 1dp to pixels
-
-
         // Enable marquee effect for long text
         binding.tv1.isSelected = true
         binding.tv1.isSelected = true
@@ -57,11 +55,13 @@ class MainActivity : BaseActivity<ActivityHomeBinding>() {
 
             // Random Name button
             btnPlayHome.setOnSingleClick {
+                Log.d("MainActivity", "btnPlayHome clicked - Opening PlayActivity")
                 startIntentRightToLeft(PlayActivity::class.java)
             }
 
             // My Name button
             btnMyRecordHome.setOnSingleClick {
+                Log.d("MainActivity", "btnMyRecordHome clicked - Opening MyRecordActivity")
                 startIntentRightToLeft(MyRecordActivity::class.java)
             }
 
@@ -130,9 +130,6 @@ class MainActivity : BaseActivity<ActivityHomeBinding>() {
 
     private fun updateText() {
         binding.apply {
-            tv1.text = strings(R.string.random_name)
-            tv2.text = strings(R.string.My_NickName)
-            tv1.text = strings(R.string.my_name)
 
             // Re-enable marquee after text update
             tv1.isSelected = true

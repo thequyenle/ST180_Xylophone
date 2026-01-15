@@ -8,12 +8,13 @@ import com.xylophone.databinding.ItemRecordingBinding
 import com.xylophone.data.model.Recording
 
 class RecordingAdapter(
-    private var recordings: List<Recording>,
+    private var recordings: MutableList<Recording>,
     private val onItemClick: (Recording?) -> Unit
 ) : RecyclerView.Adapter<RecordingAdapter.RecordingViewHolder>() {
 
     private var selectedPosition: Int = RecyclerView.NO_POSITION
 
+    fun getItemAt(position: Int) = recordings.getOrNull(position)
     fun getSelectedRecording(): Recording? {
         return if(selectedPosition in recordings.indices) recordings[selectedPosition] else null
     }
@@ -65,10 +66,9 @@ class RecordingAdapter(
 
     override fun getItemCount() = recordings.size
 
-    fun updateRecordings(newRecordings: List<Recording>) {
+    fun updateRecordings(newRecordings: MutableList<Recording>) {
         recordings = newRecordings
         selectedPosition = RecyclerView.NO_POSITION
         notifyDataSetChanged()
-        onItemClick(null)
     }
 }

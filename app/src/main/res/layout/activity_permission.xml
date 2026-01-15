@@ -56,7 +56,9 @@
             android:id="@+id/txtPer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:gravity="center"
+            android:fontFamily="@font/londrinasolid_regular"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -82,7 +84,7 @@
             <RelativeLayout
                 android:id="@+id/btnStorage"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="60dp"
                 android:background="@drawable/bg_permission">
 
                 <TextView
@@ -103,7 +105,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginVertical="10dp"
-                    android:layout_marginEnd="9dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_sw_on" />
             </RelativeLayout>
 
@@ -133,7 +135,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginVertical="10dp"
-                    android:layout_marginEnd="9dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_sw_off" />
             </RelativeLayout>
 
@@ -149,13 +151,14 @@
         android:layout_marginHorizontal="12dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:fontFamily="@font/chewy_regular"
+        android:fontFamily="@font/chicle_regular"
         android:gravity="center"
         android:text="@string/continue_per"
         android:textColor="#80F4FF"
 
         android:layout_marginBottom="50dp"
         android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/txtPermission"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

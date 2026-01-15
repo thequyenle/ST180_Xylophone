@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import com.xylophone.R
 import com.xylophone.core.base.BaseActivity
 import com.xylophone.core.extensions.animateScaleEffect
+import com.xylophone.core.extensions.handleBackLeftToRight
 import com.xylophone.core.extensions.invisible
 import com.xylophone.core.extensions.setOnSingleClick
 import com.xylophone.core.extensions.shakeViewEffect
@@ -72,6 +73,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         {
             binding.idMusic.setText(R.string.music)
         }
+        binding.btnHome.setOnSingleClick { handleBackLeftToRight() }
         // Setup instrument selectors
         setupInstrumentSelectors()
         updateInstrumentUI()
@@ -764,8 +766,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun initActionBar() {
-        // Action bar đã được thiết kế trong layout
-        // Không cần thêm logic
+        // PlayActivity không sử dụng action bar layout
     }
 
     override fun onDestroy() {

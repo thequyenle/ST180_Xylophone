@@ -118,4 +118,8 @@
     <string name="choose_sound">Choose sound</string>
     <string name="play">Play</string>
     <string name="my_record">My Record</string>
+    <string name="record">Record</string>
+    <string name="my_record_title">My record</string>
+    <string name="success_title">Amazing, you played this song very well !</string>
+    <string name="play_again">Play again</string>
 </resources>

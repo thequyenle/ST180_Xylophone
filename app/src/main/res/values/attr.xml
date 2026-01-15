@@ -25,6 +25,13 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="StrokeGradientAutoCompleteTextView">
+        <attr name="sg_outerStrokeWidth" format="dimension"/>
+        <attr name="sg_outerStrokeColor" format="color"/>
+        <attr name="sg_gradientStartColor" format="color"/>
+        <attr name="sg_gradientEndColor" format="color"/>
+    </declare-styleable>
+
     <!-- Double Stroke -->
     <declare-styleable name="DoubleStrokeTextView">
         <attr name="outerStrokeColor" format="color" />

@@ -63,7 +63,7 @@
             android:layout_gravity="center"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_colorFilter="@color/red_app"
+            app:lottie_colorFilter="@color/splash"
             app:lottie_rawRes="@raw/lottie_splash" />
 
     </FrameLayout>

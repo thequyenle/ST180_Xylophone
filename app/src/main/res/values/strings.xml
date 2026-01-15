@@ -21,8 +21,8 @@
     <string name="to_access">to access photos on your device</string>
     <string name="to_access_13">to access notification on your device</string>
 
-    <string name="rate_us">Rate Us</string>
-    <string name="share_app">Share App</string>
+    <string name="rate_us">Rate us</string>
+    <string name="share_app">Share app</string>
     <string name="privacy_policy"><![CDATA[Privacy & Policy]]></string>
 
     <string name="zero_star_title">Do you like the app?</string>
@@ -120,4 +120,8 @@
     <string name="choose_sound">Choose sound</string>
     <string name="play">Play</string>
     <string name="my_record">My Record</string>
+    <string name="record">Record</string>
+    <string name="my_record_title">My record</string>
+    <string name="success_title">Amazing, you played this song very well !</string>
+    <string name="play_again">Play again</string>
 </resources>

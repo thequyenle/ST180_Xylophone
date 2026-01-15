@@ -58,8 +58,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-        android:clipToPadding="false"
-        android:clipChildren="false"
+        android:clipToPadding="true"
+        android:clipChildren="true"
         android:layout_marginHorizontal="15dp"
         app:layout_constraintTop_toTopOf="@id/frameHome"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,32 +70,42 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/img_home_1" />
 
-        <com.xylophone.core.custom.text.DoubleStrokeTextView
+        <com.xylophone.core.custom.text.StrokeGradientTextView
             android:id="@+id/tv1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:clipToOutline="false"
             android:paddingHorizontal="10dp"
-            android:layout_height="match_parent"
+            android:layout_height="55dp"
+            app:strokeWidth="5dp"
+            app:strokeColor="@color/white"
+            app:gradientStartColor="#FFAA80"
+            app:gradientEndColor="#E45B17"
+            app:useGradient="true"
             android:fontFamily="@font/chewy_regular"
             android:text="@string/play"
-            android:textColor="#E45B17"
             android:textSize="40sp"
             android:layout_marginStart="30dp"
             android:ellipsize="marquee"
-            app:outerStrokeWidth="5dp"
-            app:outerStrokeColor="@color/white"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/glLeft"
+            app:layout_constraintEnd_toEndOf="@id/glLeft1"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
             android:scrollHorizontally="true"
             android:focusable="true"
             android:focusableInTouchMode="true" />
+
+        <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4"
+            android:id="@+id/glLeft1"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Button My Creation (Top - Full Width) -->
@@ -117,36 +127,43 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/img_home_2" />
 
-        <com.xylophone.core.custom.text.DoubleStrokeTextView
+        <com.xylophone.core.custom.text.StrokeGradientTextView
             android:id="@+id/tv2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
             android:fontFamily="@font/sigmar_regular"
             android:text="@string/my_record"
-            android:textColor="#175BE4"
-            android:textSize="38sp"
+            android:textSize="40sp"
             android:textStyle="bold"
-            app:outerStrokeColor="@color/white"
-            app:outerStrokeWidth="5dp"
+            app:strokeWidth="5dp"
+            app:strokeColor="@color/white"
+            app:gradientStartColor="#80FFFF"
+            app:gradientEndColor="#02369D"
+            app:useGradient="true"
             android:ellipsize="marquee"
-            app:layout_constraintStart_toStartOf="parent"
+            app:fontFamily="@font/chewy_regular"
+            app:layout_constraintStart_toStartOf="@id/glLeft2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
+            android:gravity="center"
             android:scrollHorizontally="true"
             android:focusable="true"
+            android:paddingEnd="15dp"
             android:focusableInTouchMode="true" />
-
         <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.4"
-            android:id="@+id/glLeft"
+            app:layout_constraintGuide_percent="0.3"
+            android:id="@+id/glLeft2"
             />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

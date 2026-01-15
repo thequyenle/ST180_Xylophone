@@ -45,16 +45,16 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>() {
 
     override fun initText() {
         binding.actionBar.tvCenter.select()
-        setGradientTextHeightColor(binding.tvContinue, "#FF6666".toColorInt(), "#FF6666".toColorInt())
+        setGradientTextHeightColor(binding.tvContinue, "#80F4FF".toColorInt(), "#80F4FF".toColorInt())
         val textRes =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) R.string.to_access_13 else R.string.to_access
 
         binding.txtPer.text = TextUtils.concat(
-            createColoredText(R.string.allow, R.color.dark_purple),
+            createColoredText(R.string.allow, R.color.white),
             " ",
-            createColoredText(R.string.app_name, R.color.red_app),
+            createColoredText(R.string.app_name, R.color.white),
             " ",
-            createColoredText(textRes, R.color.dark_purple)
+            createColoredText(textRes, R.color.white)
         )
     }
 
@@ -102,11 +102,11 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding>() {
         val params = imageView.layoutParams
         val density = resources.displayMetrics.density
         if (granted) {
-            params.width = (52 * density).toInt()  // 60dp
-            params.height = (26 * density).toInt() // 30dp
+            params.width = (40 * density).toInt()  // 60dp
+            params.height = (24 * density).toInt() // 30dp
         } else {
-            params.width = (51 * density).toInt()  // 50dp
-            params.height = (29 * density).toInt() // 25dp
+            params.width = (40 * density).toInt()  // 50dp
+            params.height = (24 * density).toInt() // 25dp
         }
         imageView.layoutParams = params
     }
