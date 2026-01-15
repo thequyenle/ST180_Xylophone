@@ -679,12 +679,12 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             updateInstrumentUI()
         }
 
-        Toast.makeText(this, "Congratulations! You completed the song!", Toast.LENGTH_LONG).show()
-
-        // Delay rồi quay về
-        Handler(Looper.getMainLooper()).postDelayed({
-            finish()
-        }, 2000)
+        // Launch SuccessActivity
+        val intent = Intent(this, SuccessActivity::class.java)
+        intent.putExtra("song_id", currentSong?.id)
+        startActivity(intent)
+        finish()
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
     // ==================== END LEARNING MODE FUNCTIONS ====================

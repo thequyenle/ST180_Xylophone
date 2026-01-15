@@ -43,11 +43,8 @@ class RecordingNameDialog(
      */
     private fun setupRecordingInfo() {
         binding.apply {
-            // Format duration thành mm:ss
-
-            // Set default name với số thứ tự
-            etRecordingName.setText("My Recording")
-            etRecordingName.setSelection(etRecordingName.text.length)  // Đặt cursor ở cuối
+            // Don't set default text - require user to input
+            etRecordingName.setText("")
         }
     }
 
@@ -78,6 +75,15 @@ class RecordingNameDialog(
                     false
                 }
             }
+
+            // Clear error when user starts typing
+            addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    error = null // Clear error when typing
+                }
+                override fun afterTextChanged(s: android.text.Editable?) {}
+            })
 
             // Request focus và show keyboard
             requestFocus()
@@ -114,13 +120,21 @@ class RecordingNameDialog(
         val name = binding.etRecordingName.text.toString().trim()
 
         if (name.isEmpty()) {
-            // Nếu tên rỗng → set default name
-            val defaultName = "My Recording"
-            onSaveClick.invoke(defaultName)
-        } else {
-            onSaveClick.invoke(name)
+            // Nếu tên rỗng → shake EditText và không cho save
+            binding.etRecordingName.apply {
+                // Shake animation to indicate error
+                val shake = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.shake_bounce)
+                startAnimation(shake)
+
+                // Show error hint
+                error = context.strings(R.string.please_enter_name)
+                requestFocus()
+            }
+            return
         }
 
+        // Only save if name is not empty
+        onSaveClick.invoke(name)
         dismiss()
     }
 

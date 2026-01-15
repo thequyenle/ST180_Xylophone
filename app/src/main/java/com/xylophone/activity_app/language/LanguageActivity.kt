@@ -117,6 +117,8 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>() {
             startIntentRightToLeft(IntroActivity::class.java)
             finishAffinity()
         } else {
+            binding.actionBar.btnActionBarRight.setImageResource(R.drawable.ic_save)
+
             startIntentWithClearTop(MainActivity::class.java)
         }
     }

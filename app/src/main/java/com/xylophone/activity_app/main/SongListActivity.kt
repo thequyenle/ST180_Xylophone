@@ -284,7 +284,7 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
             btnActionBarLeft.setImageResource(R.drawable.ic_back)
             btnActionBarLeft.visible()
             btnActionBarRightText.gone()
-            btnActionBarRight.setImageResource(R.drawable.ic_done)
+            btnActionBarRight.setImageResource(R.drawable.ic_save)
 
         }
     }
