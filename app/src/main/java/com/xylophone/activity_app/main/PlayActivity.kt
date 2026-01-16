@@ -617,7 +617,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
 
             val r = Runnable {
-                if(isPlaybackStopped) return@Runnable
+                // Kiểm tra Activity còn active không trước khi truy cập binding
+                if(isPlaybackStopped || isDestroyed || isFinishing) return@Runnable
 
 
                     // Play sound với volume boost
@@ -628,7 +629,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     button?.let { animateButton(it) }
 
                     // Update count
-                    //binding.tvCount.text = formatDuration(note.timestamp)
+                    binding.tvCount.text = formatDuration(note.timestamp)
 
             }
 
@@ -640,7 +641,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
 
         val endR = Runnable {
-            if(isPlaybackStopped) return@Runnable
+            // Kiểm tra Activity còn active không trước khi truy cập binding
+            if(isPlaybackStopped || isDestroyed || isFinishing) return@Runnable
 
             setupRecordingUI()
             isPlaybackMode = false
@@ -903,6 +905,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun onDestroy() {
+        // Hủy tất cả pending runnables để tránh crash khi Activity bị destroy
+        playbackRunnables.forEach { playbackHandler.removeCallbacks(it) }
+        playbackRunnables.clear()
         super.onDestroy()
         // SoundHelper sẽ được release khi app đóng
     }
