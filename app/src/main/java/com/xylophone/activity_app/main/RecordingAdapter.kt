@@ -35,7 +35,6 @@ class RecordingAdapter(
                     val oldPos = selectedPosition
                     val newPos = bindingAdapterPosition
                     if(newPos == RecyclerView.NO_POSITION) return@setOnClickListener
-                    onItemClick(recording)
                     selectedPosition = newPos
                     if(oldPos!= RecyclerView.NO_POSITION) notifyItemChanged(oldPos)
                     notifyItemChanged(newPos)

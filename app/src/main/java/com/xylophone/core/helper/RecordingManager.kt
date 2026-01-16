@@ -89,8 +89,7 @@ object RecordingManager {
     private fun saveRecording(context: Context, recording: Recording) {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val recordings = getAllRecordings(context).toMutableList()
-        recordings.add(recording)
-
+        recordings.add(0,recording)
         val json = gson.toJson(recordings)
         prefs.edit().putString(KEY_RECORDINGS, json).apply()
     }

@@ -9,10 +9,14 @@ import android.view.MotionEvent
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import com.xylophone.R
 import com.xylophone.core.base.BaseActivity
 import com.xylophone.core.extensions.animateScaleEffect
+import com.xylophone.core.extensions.goHome
 import com.xylophone.core.extensions.gone
 import com.xylophone.core.extensions.handleBackLeftToRight
 import com.xylophone.core.extensions.invisible
@@ -60,7 +64,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     // Instrument Selection
     private lateinit var preferenceHelper: SharePreferenceHelper
-    private var currentInstrument: Instrument = Instrument.PIANO
+    private var currentInstrument: Instrument = Instrument.XYLOPHONE
 
     private val playbackHandler = Handler(Looper.getMainLooper())
     private val playbackRunnables = mutableListOf<Runnable>()
@@ -71,6 +75,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun initView() {
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            hide(WindowInsetsCompat.Type.statusBars())
+            systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
         // Initialize preference helper
         preferenceHelper = SharePreferenceHelper(this)
 
@@ -82,7 +94,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         {
             binding.idMusic.setText(R.string.music)
         }
-        binding.btnHome.setOnSingleClick { handleBackLeftToRight() }
+        binding.btnHome.setOnSingleClick { goHome() }
         // Setup instrument selectors
         setupInstrumentSelectors()
         updateInstrumentUI()
@@ -358,12 +370,12 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
 
             btnMusic.setOnSingleClick {
-                Toast.makeText(this@PlayActivity, "Music button clicked!", Toast.LENGTH_SHORT).show()
+              //  Toast.makeText(this@PlayActivity, "Music button clicked!", Toast.LENGTH_SHORT).show()
                 try {
                     val intent = Intent(this@PlayActivity, SongListActivity::class.java)
                     startActivity(intent)
                 } catch (e: Exception) {
-                    Toast.makeText(this@PlayActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                 //   Toast.makeText(this@PlayActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
                     e.printStackTrace()
                 }
             }
@@ -525,14 +537,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         dialog.onSaveClick = { name ->
             // Lưu recording với tên user đã nhập
             RecordingManager.savePendingRecording(this, name)
-            Toast.makeText(this, "Saved: $name", Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, "Saved: $name", Toast.LENGTH_SHORT).show()
         }
 
         // Callback khi user bấm Cancel
         dialog.onCancelClick = {
             // Discard recording (không lưu)
             RecordingManager.discardPendingRecording()
-            Toast.makeText(this, "Recording discarded", Toast.LENGTH_SHORT).show()
+          //  Toast.makeText(this, "Recording discarded", Toast.LENGTH_SHORT).show()
         }
 
         dialog.show()
@@ -566,6 +578,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     // Playback recording
+    @SuppressLint("SuspiciousIndentation")
     private fun playbackRecording() {
         val recording = recordingId?.let { RecordingManager.getRecording(this, it) } ?: return
 
@@ -615,7 +628,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     button?.let { animateButton(it) }
 
                     // Update count
-                    binding.tvCount.text = formatDuration(note.timestamp)
+                    //binding.tvCount.text = formatDuration(note.timestamp)
 
             }
 
@@ -707,7 +720,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             Handler(Looper.getMainLooper()).postDelayed({
                 moveToNextNote()
             }, 300)
-        } else {
+        }
+        else {
             // ❌ SAI - Shake animation và không phát âm
             clickedButton.shakeViewEffect(duration = 50, repeatCount = 3, shakeDistance = 10f)
             // Có thể thêm sound effect "wrong" ở đây nếu muốn
@@ -732,8 +746,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             highlightedButton = button
 
             // Phóng to và làm nổi bật
-            button.scaleX = 1.2f
-            button.scaleY = 1.2f
+            button.scaleX = 1.15f
+            button.scaleY = 1.15f
             button.alpha = 1.0f
 
             // Pulse animation liên tục
@@ -845,7 +859,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         setupButtonMap()
 
         // Show feedback
-        Toast.makeText(this, "Switched to ${newInstrument.displayName}", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, "Switched to ${newInstrument.displayName}", Toast.LENGTH_SHORT).show()
     }
 
     // Update UI to show selected instrument

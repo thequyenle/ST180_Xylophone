@@ -36,7 +36,7 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
     private var currentFilter: Song.Difficulty? = null
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
-        Toast.makeText(this, "SongListActivity onCreate called", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, "SongListActivity onCreate called", Toast.LENGTH_SHORT).show()
         super.onCreate(savedInstanceState)
     }
 
@@ -232,7 +232,7 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
 
         // weight
         (tab.layoutParams as? LinearLayout.LayoutParams)?.let {
-            it.weight = 1.4f
+            it.weight = 1.3f
             tab.layoutParams = it
         }
 
@@ -257,7 +257,7 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
         tab.textSize = 16f
 
         (tab.layoutParams as? LinearLayout.LayoutParams)?.let {
-            it.weight = 0.6f
+            it.weight = 0.8f
             tab.layoutParams = it
         }
 

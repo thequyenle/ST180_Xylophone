@@ -2,9 +2,13 @@ package com.xylophone.activity_app.main
 
 import android.content.Intent
 import android.view.LayoutInflater
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.xylophone.R
 import com.xylophone.core.base.BaseActivity
 import com.xylophone.core.extensions.handleBackLeftToRight
+import com.xylophone.core.extensions.select
 import com.xylophone.core.extensions.setOnSingleClick
 import com.xylophone.databinding.ActivitySuccessBinding
 
@@ -17,7 +21,15 @@ class SuccessActivity : BaseActivity<ActivitySuccessBinding>() {
     }
 
     override fun initView() {
+        binding.play.select()
         // Get song ID from intent if passed
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            hide(WindowInsetsCompat.Type.statusBars())
+            systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
         songId = intent.getStringExtra("song_id")
     }
 

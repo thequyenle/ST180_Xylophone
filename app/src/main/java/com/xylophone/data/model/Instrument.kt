@@ -16,14 +16,14 @@ enum class Instrument(
         return when (this) {
             PIANO -> {
                 when (noteName.lowercase()) {
-                    "do" -> R.raw.note_do
-                    "re" -> R.raw.note_re
-                    "mi" -> R.raw.note_mi
-                    "fa" -> R.raw.note_fa
-                    "sol" -> R.raw.note_sol
-                    "la" -> R.raw.note_la
-                    "si" -> R.raw.note_si
-                    "do2" -> R.raw.note_do2
+                    "do" -> R.raw.samples_piano_c3
+                    "re" -> R.raw.samples_piano_d3
+                    "mi" -> R.raw.samples_piano_e3
+                    "fa" -> R.raw.samples_piano_f3
+                    "sol" -> R.raw.samples_piano_g3
+                    "la" -> R.raw.samples_piano_a3
+                    "si" -> R.raw.samples_piano_b3
+                    "do2" -> R.raw.samples_piano_c4
                     else -> 0
                 }
             }

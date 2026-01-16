@@ -53,13 +53,11 @@ class MainActivity : BaseActivity<ActivityHomeBinding>() {
         binding.apply {
             actionBar.btnActionBarRight.setOnSingleClick { startIntentRightToLeft(SettingsActivity::class.java) }
 
-            // Random Name button
             btnPlayHome.setOnSingleClick {
                 Log.d("MainActivity", "btnPlayHome clicked - Opening PlayActivity")
                 startIntentRightToLeft(PlayActivity::class.java)
             }
 
-            // My Name button
             btnMyRecordHome.setOnSingleClick {
                 Log.d("MainActivity", "btnMyRecordHome clicked - Opening MyRecordActivity")
                 startIntentRightToLeft(MyRecordActivity::class.java)
@@ -131,8 +129,10 @@ class MainActivity : BaseActivity<ActivityHomeBinding>() {
     private fun updateText() {
         binding.apply {
 
+            tv1.setText(R.string.play)
+            tv2.setText(R.string.my_record)
+
             // Re-enable marquee after text update
-            tv1.isSelected = true
             tv1.isSelected = true
             tv2.isSelected = true
         }

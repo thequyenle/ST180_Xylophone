@@ -2,6 +2,7 @@ package com.xylophone.core.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.core.graphics.createBitmap
 import com.xylophone.R
+import com.xylophone.activity_app.main.MainActivity
 import com.xylophone.core.helper.RateHelper
 import com.xylophone.core.helper.SharePreferenceHelper
 import com.xylophone.core.helper.SoundHelper
@@ -55,6 +57,16 @@ fun Context.handleBackFragmentFromRight() {
         supportFragmentManager.popBackStack()
     }
 }
+
+
+fun Activity.goHome() {
+    val intent = Intent(this, MainActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    startActivity(intent)
+    finish() // optional: để chắc chắn đóng màn hiện tại
+}
+
+
 fun Activity.hideNavigation(isBlack: Boolean = true) {
     window?.setFlags(
         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
