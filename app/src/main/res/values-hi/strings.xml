@@ -125,4 +125,6 @@
     <string name="please_enter_name">कृपया एक नाम दर्ज करें</string>
     <string name="name_the_recording">रिकॉर्डिंग का नाम रखें</string>
     <string name="enter_recording_name">रिकॉर्डिंग का नाम दर्ज करें</string>
+    <string name="the_recording_was_not_saved">रिकॉर्डिंग सेव नहीं हुई!</string>
+    <string name="cannot_switch_instrument_while_recording">रिकॉर्डिंग के दौरान वाद्य यंत्र नहीं बदला जा सकता!</string>
 </resources>

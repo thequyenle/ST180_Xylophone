@@ -173,15 +173,7 @@
             app:layout_constraintStart_toEndOf="@id/ic_music"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
 
     <ImageView
         android:id="@+id/frameMusic"

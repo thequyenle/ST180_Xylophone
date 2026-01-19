@@ -125,4 +125,6 @@
     <string name="please_enter_name">Digite um nome</string>
     <string name="name_the_recording">Nomeie a gravação</string>
     <string name="enter_recording_name">Digite o nome da gravação</string>
+    <string name="the_recording_was_not_saved">A gravação não foi salva!</string>
+    <string name="cannot_switch_instrument_while_recording">Não é possível mudar de instrumento durante a gravação!</string>
 </resources>

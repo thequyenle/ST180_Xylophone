@@ -9,6 +9,7 @@ import com.xylophone.learning.music.core.extensions.hideNavigation
 import com.xylophone.learning.music.core.extensions.select
 import com.xylophone.learning.music.core.extensions.setOnSingleClick
 import com.xylophone.learning.music.core.extensions.strings
+import com.xylophone.learning.music.core.helper.RecordingManager
 import com.xylophone.learning.music.data.model.Instrument
 import com.xylophone.learning.music.data.model.Recording
 import com.xylophone.learning.music.databinding.DialogRecordingNameBinding
@@ -115,8 +116,9 @@ class RecordingNameDialog(
     /**
      * Xử lý logic Save:
      * 1. Validate tên không rỗng
-     * 2. Gọi callback với tên đã nhập
-     * 3. Dismiss dialog
+     * 2. Check trùng tên
+     * 3. Gọi callback với tên đã nhập
+     * 4. Dismiss dialog
      */
     private fun handleSave() {
         val name = binding.etRecordingName.text.toString().trim()
@@ -135,7 +137,25 @@ class RecordingNameDialog(
             return
         }
 
-        // Only save if name is not empty
+        // Check trùng tên với recordings hiện có
+        val existingRecordings = RecordingManager.getAllRecordings(context)
+        val isDuplicate = existingRecordings.any { it.name.equals(name, ignoreCase = true) }
+
+        if (isDuplicate) {
+            // Nếu trùng tên → shake EditText và hiển thị error
+            binding.etRecordingName.apply {
+                // Shake animation to indicate error
+                val shake = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.shake_bounce)
+                startAnimation(shake)
+
+                // Show error hint
+                error = context.strings(R.string.name_already_exists)
+                requestFocus()
+            }
+            return
+        }
+
+        // Only save if name is not empty and not duplicate
         onSaveClick.invoke(name)
         dismiss()
     }

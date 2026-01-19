@@ -95,7 +95,15 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         {
             binding.idMusic.setText(R.string.music)
         }
-        binding.btnHome.setOnSingleClick { goHome() }
+        binding.btnHome.setOnSingleClick {
+            if (RecordingManager.isRecording()) {
+                Toast.makeText(this,
+                    getString(R.string.the_recording_was_not_saved), Toast.LENGTH_SHORT).show()
+                goHome()
+            } else {
+                goHome()
+            }
+        }
 
         binding.tvRecord.select()
 
@@ -374,6 +382,16 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun viewListener() {
+        binding.btnHome.setOnSingleClick {
+            if (RecordingManager.isRecording()) {
+                Toast.makeText(this,
+                    getString(R.string.the_recording_was_not_saved), Toast.LENGTH_SHORT).show()
+                goHome()
+            } else {
+                goHome()
+            }
+        }
+
         binding.apply {
             btnRecord.setOnSingleClick {
                 startRecording()
@@ -390,9 +408,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
             btnMusic.setOnSingleClick {
               //  Toast.makeText(this@PlayActivity, "Music button clicked!", Toast.LENGTH_SHORT).show()
+
                 try {
                     val intent = Intent(this@PlayActivity, SongListActivity::class.java)
-                    // Nếu từ normal mode (không phải learning/playback) → clear focus
                     if (!isLearningMode && !isPlaybackMode) {
                         intent.putExtra("clear_focus", true)
                     }
@@ -914,6 +932,13 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private fun switchInstrument(newInstrument: Instrument) {
         if (currentInstrument == newInstrument) return
 
+        // Không cho switch instrument khi đang recording
+        if (RecordingManager.isRecording()) {
+            Toast.makeText(this,
+                getString(R.string.cannot_switch_instrument_while_recording), Toast.LENGTH_SHORT).show()
+            return
+        }
+
         currentInstrument = newInstrument
 
         // Save preference
@@ -969,6 +994,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun initActionBar() {
         // PlayActivity không sử dụng action bar layout
+    }
+
+    override fun onBackPressed() {
+        if (RecordingManager.isRecording()) {
+            Toast.makeText(this, "Please stop recording first!", Toast.LENGTH_SHORT).show()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun onDestroy() {
