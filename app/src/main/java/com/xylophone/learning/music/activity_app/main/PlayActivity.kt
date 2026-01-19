@@ -57,12 +57,15 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     // Playback
     private var isPlaybackMode = false
     private var recordingId: String? = null
+    private var playbackStartTime = 0L
+    private var playbackTimerRunnable: Runnable? = null
 
     // Learning Mode
     private var isLearningMode = false
     private var currentSong: Song? = null
     private var currentNoteIndex = 0
     private var highlightedButton: ImageView? = null
+    private var pendingMoveToNextNote: Runnable? = null // Track handler pending
 
     // Instrument Selection
     private lateinit var preferenceHelper: SharePreferenceHelper
@@ -81,7 +84,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
             hideSystemBars()
-
         }
     }
 
@@ -172,16 +174,30 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         // Cancel animation cũ (để nhảy được liên tục, kể cả nốt lặp lại)
         sun.animate().cancel()
+
+        // Nếu có animation đang chạy, force finish để lấy vị trí đích chính xác
+        sunJumpAnimator?.let { animator ->
+            if (animator.isRunning) {
+                animator.end() // Force kết thúc animation để sun về đúng vị trí đích
+            }
+        }
         sunJumpAnimator?.cancel()
 
         // Nếu lần đầu (chưa có vị trí), đặt thẳng tới target để khỏi bay từ (0,0)
+        val startX: Float
+        val startY: Float
+
         if (sun.x == 0f && sun.y == 0f) {
+            // Lần đầu: bắt đầu từ vị trí target luôn (không bay từ góc màn hình)
+            startX = targetX
+            startY = targetY
             sun.x = targetX
             sun.y = targetY
+            return // Không cần animation lần đầu
+        } else {
+            startX = sun.x
+            startY = sun.y
         }
-
-        val startX = sun.x
-        val startY = sun.y
         val dx = targetX - startX
         val dy = targetY - startY
 
@@ -191,12 +207,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         // Nếu target gần như trùng (nốt lặp lại), vẫn nhảy tại chỗ
         val needOnlyJump = kotlin.math.abs(dx) < 2f && kotlin.math.abs(dy) < 2f
 
-        val duration = 650L
+        // Giảm duration để kịp hoàn thành trước khi moveToNextNote (300ms)
+        val duration = 250L
 
-        // Tạo “nhảy theo parabol”: y = linear - 4h*t(1-t)
+        // Tạo "nhảy theo parabol": y = linear - 4h*t(1-t)
         val anim = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
             this.duration = duration
-            interpolator = android.view.animation.AccelerateDecelerateInterpolator()
+            // Dùng OvershootInterpolator để animation nhanh hơn nhưng vẫn mượt
+            interpolator = android.view.animation.OvershootInterpolator(0.5f)
 
             addUpdateListener { va ->
                 val t = va.animatedValue as Float
@@ -527,6 +545,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         playbackRunnables.forEach { playbackHandler.removeCallbacks(it) }
         playbackRunnables.clear()
 
+        // Stop playback timer
+        stopPlaybackTimer()
+
         setupRecordingUI()
         isPlaybackMode = false
 
@@ -546,6 +567,12 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         // Clear lastPlayedSongId vì đã stop → reset focus khi quay lại
         preferenceHelper.clearLastPlayedSongId()
+
+        // Cancel pending moveToNextNote handler
+        pendingMoveToNextNote?.let {
+            Handler(Looper.getMainLooper()).removeCallbacks(it)
+        }
+        pendingMoveToNextNote = null
 
         highlightedButton?.apply {
             clearAnimation()
@@ -622,6 +649,31 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
+    // Start playback timer
+    private fun startPlaybackTimer(duration: Long) {
+        playbackStartTime = System.currentTimeMillis()
+        playbackTimerRunnable = object : Runnable {
+            override fun run() {
+                if (isPlaybackStopped || isDestroyed || isFinishing) return
+
+                val elapsed = System.currentTimeMillis() - playbackStartTime
+                if (elapsed <= duration) {
+                    binding.tvCount.text = formatDuration(elapsed)
+                    timerHandler.postDelayed(this, 100)
+                }
+            }
+        }
+        timerHandler.post(playbackTimerRunnable!!)
+    }
+
+    // Stop playback timer
+    private fun stopPlaybackTimer() {
+        playbackTimerRunnable?.let {
+            timerHandler.removeCallbacks(it)
+        }
+        playbackTimerRunnable = null
+    }
+
     // Playback recording
     @SuppressLint("SuspiciousIndentation")
     private fun playbackRecording() {
@@ -657,6 +709,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             img3.alpha = 0.3f
         }
 
+        // Start playback timer để update thời gian liên tục
+        startPlaybackTimer(recording.duration)
+
         // Play notes với timing
         recording.notes.forEach { note ->
 
@@ -673,9 +728,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     val button = buttonSoundMap.entries.find { it.value == note.noteId }?.key
                     button?.let { animateButton(it) }
 
-                    // Update count
-                    binding.tvCount.text = formatDuration(note.timestamp)
-
             }
 
             playbackRunnables.add(r)
@@ -688,6 +740,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         val endR = Runnable {
             // Kiểm tra Activity còn active không trước khi truy cập binding
             if(isPlaybackStopped || isDestroyed || isFinishing) return@Runnable
+
+            // Stop playback timer
+            stopPlaybackTimer()
 
             setupRecordingUI()
             isPlaybackMode = false
@@ -771,9 +826,20 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         if (clickedNoteName == correctNoteName) {
             // ✅ ĐÚNG - Move to next note (sun sẽ nhảy)
-            Handler(Looper.getMainLooper()).postDelayed({
+
+            // Nếu đã có handler pending, bỏ qua (tránh bấm nhanh tạo nhiều handler)
+            if (pendingMoveToNextNote != null) {
+                return true // Vẫn hiển thị icon nhưng không schedule thêm handler
+            }
+
+            // Tạo và lưu runnable để track
+            val moveRunnable = Runnable {
                 moveToNextNote()
-            }, 300)
+                pendingMoveToNextNote = null // Clear sau khi chạy xong
+            }
+            pendingMoveToNextNote = moveRunnable
+
+            Handler(Looper.getMainLooper()).postDelayed(moveRunnable, 300)
         }
         // ❌ SAI - Không làm gì, giữ nguyên highlight nốt hiện tại
 
@@ -877,6 +943,12 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         // Clear lastPlayedSongId vì đã hoàn thành → reset focus khi quay lại
         preferenceHelper.clearLastPlayedSongId()
+
+        // Cancel pending moveToNextNote handler
+        pendingMoveToNextNote?.let {
+            Handler(Looper.getMainLooper()).removeCallbacks(it)
+        }
+        pendingMoveToNextNote = null
 
         // Reset highlight
         highlightedButton?.apply {
@@ -1038,6 +1110,15 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         // Stop timer nếu đang chạy
         stopTimer()
+
+        // Stop playback timer nếu đang chạy
+        stopPlaybackTimer()
+
+        // Cancel pending moveToNextNote handler
+        pendingMoveToNextNote?.let {
+            Handler(Looper.getMainLooper()).removeCallbacks(it)
+        }
+        pendingMoveToNextNote = null
 
         // Hủy tất cả pending runnables để tránh crash khi Activity bị destroy
         playbackRunnables.forEach { playbackHandler.removeCallbacks(it) }

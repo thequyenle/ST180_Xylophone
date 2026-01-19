@@ -61,6 +61,8 @@ class RecordingNameDialog(
             // Set text cho buttons
             tvBottomLeft.text = context.strings(R.string.cancel)
             tvBottomRight.text = context.strings(R.string.save)
+            tvBottomRight.select()
+            tvBottomLeft.select()
         }
     }
 
@@ -126,9 +128,9 @@ class RecordingNameDialog(
         if (name.isEmpty()) {
             // Nếu tên rỗng → shake EditText và không cho save
             binding.etRecordingName.apply {
-                // Shake animation to indicate error
-                val shake = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.shake_bounce)
-                startAnimation(shake)
+//                // Shake animation to indicate error
+//                val shake = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.shake_bounce)
+//                startAnimation(shake)
 
                 // Show error hint
                 error = context.strings(R.string.please_enter_name)
