@@ -65,7 +65,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private var currentSong: Song? = null
     private var currentNoteIndex = 0
     private var highlightedButton: ImageView? = null
-    private var pendingMoveToNextNote: Runnable? = null // Track handler pending
 
     // Instrument Selection
     private lateinit var preferenceHelper: SharePreferenceHelper
@@ -568,12 +567,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         // Clear lastPlayedSongId vì đã stop → reset focus khi quay lại
         preferenceHelper.clearLastPlayedSongId()
 
-        // Cancel pending moveToNextNote handler
-        pendingMoveToNextNote?.let {
-            Handler(Looper.getMainLooper()).removeCallbacks(it)
-        }
-        pendingMoveToNextNote = null
-
         highlightedButton?.apply {
             clearAnimation()
             alpha = 1f
@@ -609,14 +602,21 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         dialog.onSaveClick = { name ->
             // Lưu recording với tên user đã nhập
             RecordingManager.savePendingRecording(this, name)
-            Toast.makeText(this, "Saved: $name", Toast.LENGTH_SHORT).show()
-        }
+            Toast.makeText(
+                this,
+                getString(R.string.recording_saved, name),
+                Toast.LENGTH_SHORT
+            ).show()        }
 
         // Callback khi user bấm Cancel
         dialog.onCancelClick = {
             // Discard recording (không lưu)
             RecordingManager.discardPendingRecording()
-          Toast.makeText(this, "Recording discarded", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                getString(R.string.recording_discarded),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         dialog.show()
@@ -825,21 +825,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         val correctNoteName = song.notes[currentNoteIndex]
 
         if (clickedNoteName == correctNoteName) {
-            // ✅ ĐÚNG - Move to next note (sun sẽ nhảy)
-
-            // Nếu đã có handler pending, bỏ qua (tránh bấm nhanh tạo nhiều handler)
-            if (pendingMoveToNextNote != null) {
-                return true // Vẫn hiển thị icon nhưng không schedule thêm handler
-            }
-
-            // Tạo và lưu runnable để track
-            val moveRunnable = Runnable {
-                moveToNextNote()
-                pendingMoveToNextNote = null // Clear sau khi chạy xong
-            }
-            pendingMoveToNextNote = moveRunnable
-
-            Handler(Looper.getMainLooper()).postDelayed(moveRunnable, 300)
+            // ✅ ĐÚNG - Move to next note ngay lập tức (không delay)
+            moveToNextNote()
         }
         // ❌ SAI - Không làm gì, giữ nguyên highlight nốt hiện tại
 
@@ -868,7 +855,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         val buttonToHighlight = buttonNameMap.entries.find { it.value == correctNoteName }?.key
 
         buttonToHighlight?.let { button ->
-            // Chỉ reset button cũ nếu nó KHÁC với button mới (tránh reset nhầm khi nốt lặp lại)
+            // Reset button cũ nếu khác button
             if (highlightedButton != button) {
                 highlightedButton?.apply {
                     clearAnimation()
@@ -876,29 +863,31 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                     scaleX = 1.0f
                     scaleY = 1.0f
                 }
-            } else {
-                // Nếu cùng button (nốt lặp lại), clear animation và tạo hiệu ứng bounce
-                button.clearAnimation()
-                button.animate().cancel()
             }
 
             highlightedButton = button
 
-            // Phóng to và làm nổi bật với animation
+            // Clear animation cũ trước
+            button.clearAnimation()
+            button.animate().cancel()
+
+            // Reset về bình thường trước
+            button.scaleX = 1.0f
+            button.scaleY = 1.0f
+            button.alpha = 1.0f
+
+            // Sau đó phóng to lên để tạo hiệu ứng bounce (kể cả khi nốt lặp lại)
             button.animate()
                 .scaleX(1.15f)
                 .scaleY(1.15f)
-                .alpha(1.0f)
-                .setDuration(200)
-                .setInterpolator(android.view.animation.OvershootInterpolator(2.0f))
+                .setDuration(100)
                 .withEndAction {
-                    // Sau khi scale xong, start pulse animation
+                    // Start pulse animation sau khi scale xong
                     startPulseAnimation(button)
                 }
                 .start()
 
             // ✅ Sun nhảy tới đúng nốt (kể cả nốt lặp lại)
-            // chạy sau 1 frame để sun có width/height ổn định
             binding.overlayContainer.post {
                 jumpSunToButton(button)
             }
@@ -943,12 +932,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         // Clear lastPlayedSongId vì đã hoàn thành → reset focus khi quay lại
         preferenceHelper.clearLastPlayedSongId()
-
-        // Cancel pending moveToNextNote handler
-        pendingMoveToNextNote?.let {
-            Handler(Looper.getMainLooper()).removeCallbacks(it)
-        }
-        pendingMoveToNextNote = null
 
         // Reset highlight
         highlightedButton?.apply {
@@ -1113,12 +1096,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         // Stop playback timer nếu đang chạy
         stopPlaybackTimer()
-
-        // Cancel pending moveToNextNote handler
-        pendingMoveToNextNote?.let {
-            Handler(Looper.getMainLooper()).removeCallbacks(it)
-        }
-        pendingMoveToNextNote = null
 
         // Hủy tất cả pending runnables để tránh crash khi Activity bị destroy
         playbackRunnables.forEach { playbackHandler.removeCallbacks(it) }

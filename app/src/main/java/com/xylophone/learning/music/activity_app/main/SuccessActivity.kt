@@ -20,6 +20,23 @@ class SuccessActivity : BaseActivity<ActivitySuccessBinding>() {
         return ActivitySuccessBinding.inflate(LayoutInflater.from(this))
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemBars()
+        }
+    }
+
+    private fun hideSystemBars() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val controller = WindowInsetsControllerCompat(window, binding.root)
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        controller.hide(WindowInsetsCompat.Type.statusBars())
+        // Nếu muốn “chắc” hơn thì dùng systemBars():
+        // controller.hide(WindowInsetsCompat.Type.systemBars())
+    }
     override fun initView() {
         binding.play.select()
         // Get song ID from intent if passed

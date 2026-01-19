@@ -116,6 +116,9 @@
     <string name="ok">Ok</string>
     <string name="name_already_exists">Ce nom existe déjà</string>
 
+    <!-- French (fr) -->
+    <string name="recording_saved">Enregistré : %1$s</string>
+    <string name="recording_discarded">Enregistrement supprimé</string>
     <string name="stop">Arrêter</string>
     <string name="choose_sound">Choisir un son</string>
     <string name="play">Lire</string>

@@ -71,10 +71,13 @@ class RecordingNameDialog(
      */
     private fun setupEditText() {
         binding.etRecordingName.apply {
-            // Khi user bấm Done trên keyboard → trigger Save
+            // Khi user bấm Done trên keyboard → chỉ ẩn bàn phím
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    handleSave()
+                    // Ẩn bàn phím
+                    val imm = context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                    imm.hideSoftInputFromWindow(windowToken, 0)
+                    clearFocus()
                     true
                 } else {
                     false
@@ -146,9 +149,9 @@ class RecordingNameDialog(
         if (isDuplicate) {
             // Nếu trùng tên → shake EditText và hiển thị error
             binding.etRecordingName.apply {
-                // Shake animation to indicate error
-                val shake = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.shake_bounce)
-                startAnimation(shake)
+//                // Shake animation to indicate error
+//                val shake = android.view.animation.AnimationUtils.loadAnimation(context, R.anim.shake_bounce)
+//                startAnimation(shake)
 
                 // Show error hint
                 error = context.strings(R.string.name_already_exists)

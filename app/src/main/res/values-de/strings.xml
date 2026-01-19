@@ -114,7 +114,9 @@
     <string name="your_name_has_been_saved_to_my_nickname">Dein Name wurde in „Mein Spitzname“ gespeichert</string>
     <string name="length">Länge:</string>
     <string name="name_already_exists">Dieser Name existiert bereits</string>
-
+    <!-- German (de) -->
+    <string name="recording_saved">Gespeichert: %1$s</string>
+    <string name="recording_discarded">Aufnahme verworfen</string>
     <string name="ok">Ok</string>
     <string name="stop">Stopp</string>
     <string name="choose_sound">Sound auswählen</string>

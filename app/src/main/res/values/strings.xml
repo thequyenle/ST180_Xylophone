@@ -119,6 +119,8 @@
     <string name="stop">Stop</string>
     <string name="choose_sound">Choose sound</string>
     <string name="play">Play</string>
+    <string name="recording_saved">Saved: %1$s</string>
+    <string name="recording_discarded">Recording discarded</string>
     <string name="my_record">My Record</string>
     <string name="record">Record</string>
     <string name="my_record_title">My record</string>

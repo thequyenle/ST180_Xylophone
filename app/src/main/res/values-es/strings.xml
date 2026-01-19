@@ -19,6 +19,9 @@
     <string name="to_access">para acceder a las fotos en tu dispositivo</string>
     <string name="to_access_13">para acceder a las notificaciones en tu dispositivo</string>
 
+    <!-- Spanish (es) -->
+    <string name="recording_saved">Guardado: %1$s</string>
+    <string name="recording_discarded">Grabación descartada</string>
     <string name="rate_us">Califícanos</string>
     <string name="share_app">Compartir app</string>
     <string name="privacy_policy"><![CDATA[Privacidad y Política]]></string>

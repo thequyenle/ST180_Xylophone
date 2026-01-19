@@ -26,6 +26,11 @@
     <string name="zero_star_title">Apakah kamu suka aplikasinya?</string>
     <string name="zero_star">Ceritakan pengalamanmu</string>
 
+
+    <!-- Indonesian (id) -->
+    <string name="recording_saved">Tersimpan: %1$s</string>
+    <string name="recording_discarded">Rekaman dibuang</string>
+
     <string name="one_star_title">Oh, tidak!</string>
     <string name="one_star">Mohon beri kami masukan</string>
     <string name="name_already_exists">Nama ini sudah ada</string>

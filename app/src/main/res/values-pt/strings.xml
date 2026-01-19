@@ -119,6 +119,9 @@
     <string name="play">Reproduzir</string>
     <string name="my_record">Minha gravação</string>
     <string name="record">Gravar</string>
+    <!-- Portuguese (pt) -->
+    <string name="recording_saved">Salvo: %1$s</string>
+    <string name="recording_discarded">Gravação descartada</string>
     <string name="my_record_title">Minha gravação</string>
     <string name="success_title">Incrível, você tocou esta música muito bem!</string>
     <string name="play_again">Tocar novamente</string>
