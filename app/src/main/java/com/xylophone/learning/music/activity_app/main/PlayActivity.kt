@@ -137,6 +137,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         // Nếu chưa hiện thì hiện lên (learning mode)
         if (!sun.isVisible) sun.visible()
 
+        // Đợi sun được layout xong (có width/height) trước khi tính toán
+        if (sun.width == 0 || sun.height == 0) {
+            sun.post {
+                jumpSunToButton(targetButton) // Gọi lại sau khi layout xong
+            }
+            return
+        }
+
         // Tính vị trí button so với overlayContainer
         val buttonLocation = IntArray(2)
         val containerLocation = IntArray(2)
@@ -747,15 +755,21 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         if (currentNoteIndex >= song.notes.size) return
 
         // Reset highlight của button trước
-        highlightedButton?.alpha = 1.0f
-        highlightedButton?.scaleX = 1.0f
-        highlightedButton?.scaleY = 1.0f
+        highlightedButton?.apply {
+            clearAnimation() // Clear animation trước khi reset
+            alpha = 1.0f
+            scaleX = 1.0f
+            scaleY = 1.0f
+        }
 
         // Tìm button cần highlight
         val correctNoteName = song.notes[currentNoteIndex]
         val buttonToHighlight = buttonNameMap.entries.find { it.value == correctNoteName }?.key
 
         buttonToHighlight?.let { button ->
+            // Clear animation của button mới (trong trường hợp nốt lặp lại)
+            button.clearAnimation()
+
             highlightedButton = button
 
             // Phóng to và làm nổi bật

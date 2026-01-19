@@ -46,8 +46,8 @@ enum class Instrument(
                     "re" -> R.raw.re_guitar
                     "mi" -> R.raw.mi_guitar
                     "fa" -> R.raw.fa_guitar
-                    "sol" -> R.raw.sol_guitar1
-                    "la" -> R.raw.la_guitar1
+                    "sol" -> R.raw.g3
+                    "la" -> R.raw.a3
                     "si" -> R.raw.si_guitar
                     "do2" -> R.raw.do2_guitar
                     else -> 0

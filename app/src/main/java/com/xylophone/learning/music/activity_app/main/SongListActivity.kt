@@ -153,13 +153,13 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
 
     private fun setupFilters() {
         binding.apply {
-            allSong.setOnSingleClick {
-                selecTab(true)
-            }
-
-            myRecord.setOnSingleClick {
-                selecTab(false)
-            }
+//            allSong.setOnSingleClick {
+//                selecTab(true)
+//            }
+//
+//            myRecord.setOnSingleClick {
+//                selecTab(false)
+//            }
 
         }
         selecTab(true)
@@ -209,20 +209,20 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
 
         binding.actionBar.btnActionBarRight.invisible()
 
-        if(isSongTab) {
-            binding.tabMode.setBackgroundResource(R.drawable.tab_selected_song)
-            applySelectedTab(binding.allSong)
-            applyUnselectedTab(binding.myRecord)
-            binding.recyclerViewSongs.adapter = songAdapter
-            loadSongs()
-        }else{
-            binding.tabMode.setBackgroundResource(R.drawable.tab_selected_record)
-            applySelectedTab(binding.myRecord)
-            applyUnselectedTab(binding.allSong)
-            setupRecordingRecyclerView()
-            loadRecordings()
-
-        }
+//        if(isSongTab) {
+//            binding.tabMode.setBackgroundResource(R.drawable.tab_selected_song)
+//            applySelectedTab(binding.allSong)
+//            applyUnselectedTab(binding.myRecord)
+//            binding.recyclerViewSongs.adapter = songAdapter
+//            loadSongs()
+//        }else{
+//            binding.tabMode.setBackgroundResource(R.drawable.tab_selected_record)
+//            applySelectedTab(binding.myRecord)
+//            applyUnselectedTab(binding.allSong)
+//            setupRecordingRecyclerView()
+//            loadRecordings()
+//
+//        }
     }
 
     private fun applySelectedTab(tab: DoubleStrokeTextView) {
