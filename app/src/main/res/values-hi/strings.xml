@@ -115,6 +115,8 @@
     <string name="length">लंबाई:</string>
     <string name="ok">ठीक</string>
     <string name="stop">रोकें</string>
+    <string name="name_already_exists">यह नाम पहले से मौजूद है</string>
+
     <string name="choose_sound">ध्वनि चुनें</string>
     <string name="play">चलाएँ</string>
     <string name="my_record">मेरी रिकॉर्डिंग</string>

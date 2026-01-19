@@ -35,13 +35,12 @@ class SuccessActivity : BaseActivity<ActivitySuccessBinding>() {
 
     override fun viewListener() {
         binding.apply {
-            // Play Again button - restart the same song
+            // Play button - go back to PlayActivity (normal mode)
             btnBgPlay.setOnSingleClick {
-                // Go back to PlayActivity with the same song to play again
+                // Go back to PlayActivity (normal mode, not learning)
                 val intent = Intent(this@SuccessActivity, PlayActivity::class.java)
-                songId?.let {
-                    intent.putExtra("song_id", it)
-                }
+                // Flag để PlayActivity biết đến từ Success → bấm back sẽ về Home
+                intent.putExtra("from_success", true)
                 startActivity(intent)
                 finish()
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -58,10 +57,11 @@ class SuccessActivity : BaseActivity<ActivitySuccessBinding>() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        // Go back to PlayActivity (normal mode)
         val intent = Intent(this@SuccessActivity, PlayActivity::class.java)
+        // Flag để PlayActivity biết đến từ Success → bấm back sẽ về Home
+        intent.putExtra("from_success", true)
         startActivity(intent)
         finish()
-
     }
 }

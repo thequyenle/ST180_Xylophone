@@ -76,15 +76,17 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         return ActivityPlayBinding.inflate(LayoutInflater.from(this))
     }
 
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemBars()
+
+        }
+    }
+
     override fun initView() {
         binding.idMusic.select()
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        WindowInsetsControllerCompat(window, window.decorView).apply {
-            hide(WindowInsetsCompat.Type.statusBars())
-            systemBarsBehavior =
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
         // Initialize preference helper
         preferenceHelper = SharePreferenceHelper(this)
 
@@ -778,6 +780,18 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         return true // Luôn hiển thị icon (dù đúng hay sai)
     }
 
+
+    private fun hideSystemBars() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val controller = WindowInsetsControllerCompat(window, binding.root)
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        controller.hide(WindowInsetsCompat.Type.statusBars())
+        // Nếu muốn “chắc” hơn thì dùng systemBars():
+        // controller.hide(WindowInsetsCompat.Type.systemBars())
+    }
+
     // Highlight nốt hiện tại
     private fun highlightCurrentNote() {
         val song = currentSong ?: return
@@ -998,7 +1012,17 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
     override fun onBackPressed() {
         if (RecordingManager.isRecording()) {
-            Toast.makeText(this, "Please stop recording first!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.the_recording_was_not_saved), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Nếu đến từ SuccessActivity → về Home
+        val fromSuccess = intent.getBooleanExtra("from_success", false)
+        if (fromSuccess) {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
+            finish()
         } else {
             super.onBackPressed()
         }

@@ -134,8 +134,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btnMusic"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="44dp"
+        android:layout_marginStart="15dp"
+        app:layout_constraintStart_toEndOf="@id/img3"
         android:background="@drawable/music_bg"
         app:layout_constraintEnd_toStartOf="@id/btnRecord"
         app:layout_constraintTop_toTopOf="@id/img2"
@@ -157,8 +159,9 @@
         <TextView
             android:id="@+id/idMusic"
             android:paddingStart="0dp"
-            android:layout_width="55dp"
+            android:layout_width="0dp"
             android:gravity="center"
+            android:layout_marginStart="5dp"
             style="@style/single_marquee"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

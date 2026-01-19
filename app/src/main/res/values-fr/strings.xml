@@ -114,6 +114,8 @@
     <string name="your_name_has_been_saved_to_my_nickname">Votre nom a été enregistré dans mon surnom</string>
     <string name="length">Longueur :</string>
     <string name="ok">Ok</string>
+    <string name="name_already_exists">Ce nom existe déjà</string>
+
     <string name="stop">Arrêter</string>
     <string name="choose_sound">Choisir un son</string>
     <string name="play">Lire</string>
