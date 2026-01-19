@@ -81,6 +81,6 @@
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
 
--keep class com.xylophone.activity_app.splash.SplashActivity.** {*; }
--keep class com.xylophone.data.** {*; }
+-keep class com.xylophone.learning.music.activity_app.splash.SplashActivity.** {*; }
+-keep class com.xylophone.learning.music.data.** {*; }
 -keep public class com.google.android.gms.** { public protected *; }

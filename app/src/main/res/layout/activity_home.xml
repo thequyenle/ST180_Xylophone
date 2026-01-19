@@ -73,7 +73,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/img_home_1" />
 
-        <com.xylophone.core.custom.text.StrokeGradientTextView
+        <com.xylophone.learning.music.core.custom.text.StrokeGradientTextView
             android:id="@+id/tv1"
             android:layout_width="0dp"
             android:clipToOutline="false"
@@ -130,7 +130,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/img_home_2" />
 
-        <com.xylophone.core.custom.text.StrokeGradientTextView
+        <com.xylophone.learning.music.core.custom.text.StrokeGradientTextView
             android:id="@+id/tv2"
             android:layout_width="0dp"
             android:layout_height="55dp"

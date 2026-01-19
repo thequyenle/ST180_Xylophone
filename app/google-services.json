@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "387178617382",
-    "project_id": "st118-nickname-generator",
-    "storage_bucket": "st118-nickname-generator.firebasestorage.app"
+    "project_number": "662948067326",
+    "project_id": "st182-xylophone-learning-music",
+    "storage_bucket": "st182-xylophone-learning-music.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:387178617382:android:2ff6f12b44341bc67d24e7",
+        "mobilesdk_app_id": "1:662948067326:android:3870295a71454df69d72af",
         "android_client_info": {
-          "package_name": "com.xylophone"
+          "package_name": "com.xylophone.learning.music"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCfvoApUo2LU_BJqNX6ntpw3IYS3tJcQYc"
+          "current_key": "AIzaSyCAKquMsAjTjE3zMdT4iwNlLKU0iDxfs9k"
         }
       ],
       "services": {

@@ -48,7 +48,7 @@
                 android:padding="8dp"
                 android:weightSum="2">
 
-                <com.xylophone.core.custom.text.DoubleStrokeTextView
+                <com.xylophone.learning.music.core.custom.text.DoubleStrokeTextView
                     android:id="@+id/allSong"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
@@ -63,7 +63,7 @@
                     app:outerStrokeColor="#E47E17"
                     app:outerStrokeWidth="4dp" />
 
-                <com.xylophone.core.custom.text.DoubleStrokeTextView
+                <com.xylophone.learning.music.core.custom.text.DoubleStrokeTextView
                     android:id="@+id/myRecord"
                     android:layout_width="0dp"
                     android:layout_height="60dp"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_record"
-    tools:context="com.xylophone.activity_app.main.MyRecordActivity">
+    tools:context="com.xylophone.learning.music.activity_app.main.MyRecordActivity">
 
     <FrameLayout
         android:id="@+id/layoutActionBar"
@@ -26,7 +26,7 @@
         android:id="@+id/recyclerViewRecordings"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="-17dp"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

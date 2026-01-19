@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_play"
-    tools:context="com.xylophone.activity_app.main.SuccessActivity">
+    tools:context="com.xylophone.learning.music.activity_app.main.SuccessActivity">
     >
 
     <ImageView

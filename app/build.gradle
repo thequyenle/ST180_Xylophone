@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.xylophone'
+    namespace 'com.xylophone.learning.music'
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.xylophone"
+        applicationId "com.xylophone.learning.music"
         minSdk 24
         targetSdk 36
         versionCode 1
