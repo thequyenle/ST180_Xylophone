@@ -77,7 +77,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun initView() {
-
+        binding.idMusic.select()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         WindowInsetsControllerCompat(window, window.decorView).apply {
@@ -88,6 +88,8 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         // Initialize preference helper
         preferenceHelper = SharePreferenceHelper(this)
 
+        // Load instrument based on mode
+        loadInstrumentBasedOnMode()
 
         if(!isLearningMode&&!isPlaybackMode)
         {
@@ -390,6 +392,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
               //  Toast.makeText(this@PlayActivity, "Music button clicked!", Toast.LENGTH_SHORT).show()
                 try {
                     val intent = Intent(this@PlayActivity, SongListActivity::class.java)
+                    // Nếu từ normal mode (không phải learning/playback) → clear focus
+                    if (!isLearningMode && !isPlaybackMode) {
+                        intent.putExtra("clear_focus", true)
+                    }
                     startActivity(intent)
                 } catch (e: Exception) {
                  //   Toast.makeText(this@PlayActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
@@ -481,7 +487,6 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             btnStop.isVisible = false
             btnCount.isVisible = false
             tvCount.text = "00:00"
-
             // RE-ENABLE instrument switching sau khi stop recording
             img1.isEnabled = true
             img2.isEnabled = true
@@ -518,6 +523,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         isLearningMode = false
         currentSong = null
         currentNoteIndex = 0
+
+        // Clear lastPlayedSongId vì đã stop → reset focus khi quay lại
+        preferenceHelper.clearLastPlayedSongId()
 
         highlightedButton?.apply {
             clearAnimation()
@@ -690,6 +698,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             currentSong = SongLibrary.getSongById(songId)
             currentNoteIndex = 0
 
+            // Lưu songId để focus lại khi quay về SongListActivity
+            preferenceHelper.setLastPlayedSongId(songId)
+
             // Setup UI cho learning mode
             binding.apply {
                 btnRecord.invisible()
@@ -754,31 +765,39 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         val song = currentSong ?: return
         if (currentNoteIndex >= song.notes.size) return
 
-        // Reset highlight của button trước
-        highlightedButton?.apply {
-            clearAnimation() // Clear animation trước khi reset
-            alpha = 1.0f
-            scaleX = 1.0f
-            scaleY = 1.0f
-        }
-
         // Tìm button cần highlight
         val correctNoteName = song.notes[currentNoteIndex]
         val buttonToHighlight = buttonNameMap.entries.find { it.value == correctNoteName }?.key
 
         buttonToHighlight?.let { button ->
-            // Clear animation của button mới (trong trường hợp nốt lặp lại)
-            button.clearAnimation()
+            // Chỉ reset button cũ nếu nó KHÁC với button mới (tránh reset nhầm khi nốt lặp lại)
+            if (highlightedButton != button) {
+                highlightedButton?.apply {
+                    clearAnimation()
+                    alpha = 1.0f
+                    scaleX = 1.0f
+                    scaleY = 1.0f
+                }
+            } else {
+                // Nếu cùng button (nốt lặp lại), clear animation và tạo hiệu ứng bounce
+                button.clearAnimation()
+                button.animate().cancel()
+            }
 
             highlightedButton = button
 
-            // Phóng to và làm nổi bật
-            button.scaleX = 1.15f
-            button.scaleY = 1.15f
-            button.alpha = 1.0f
-
-            // Pulse animation liên tục
-            startPulseAnimation(button)
+            // Phóng to và làm nổi bật với animation
+            button.animate()
+                .scaleX(1.15f)
+                .scaleY(1.15f)
+                .alpha(1.0f)
+                .setDuration(200)
+                .setInterpolator(android.view.animation.OvershootInterpolator(2.0f))
+                .withEndAction {
+                    // Sau khi scale xong, start pulse animation
+                    startPulseAnimation(button)
+                }
+                .start()
 
             // ✅ Sun nhảy tới đúng nốt (kể cả nốt lặp lại)
             // chạy sau 1 frame để sun có width/height ổn định
@@ -823,6 +842,10 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
 
         if(isLearningComplete) return
         isLearningComplete = true
+
+        // Clear lastPlayedSongId vì đã hoàn thành → reset focus khi quay lại
+        preferenceHelper.clearLastPlayedSongId()
+
         // Reset highlight
         highlightedButton?.apply {
             alpha = 1.0f
@@ -854,6 +877,21 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     // ==================== END LEARNING MODE FUNCTIONS ====================
 
     // ==================== INSTRUMENT SWITCHING FUNCTIONS ====================
+
+    // Load instrument based on mode (from Home or from SongList)
+    private fun loadInstrumentBasedOnMode() {
+        val mode = intent.getStringExtra("mode")
+
+        if (mode == "LEARNING_MODE" || mode == "PLAYBACK_MODE") {
+            // Từ SongList hoặc MyRecord → Load instrument đã lưu
+            val savedInstrument = preferenceHelper.getSelectedInstrument()
+            currentInstrument = Instrument.fromName(savedInstrument)
+        } else {
+            // Từ Home → Reset về Xylophone (mặc định)
+            currentInstrument = Instrument.XYLOPHONE
+            preferenceHelper.setSelectedInstrument(Instrument.XYLOPHONE.name)
+        }
+    }
 
     // Setup instrument selector click listeners
     private fun setupInstrumentSelectors() {

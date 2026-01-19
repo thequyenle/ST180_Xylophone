@@ -78,4 +78,18 @@ class SongAdapter(
         notifyDataSetChanged()
         onSongClick(null)
     }
+
+    // Select song by ID and return position
+    fun selectSongById(songId: String): Int {
+        val position = songs.indexOfFirst { it.id == songId }
+        if (position != RecyclerView.NO_POSITION) {
+            selectedPosition = position
+            notifyItemChanged(position)
+            onSongClick(songs[position])
+        }
+        return position
+    }
+
+    // Get selected position
+    fun getSelectedPosition(): Int = selectedPosition
 }

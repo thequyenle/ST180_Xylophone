@@ -78,7 +78,7 @@
             android:layout_width="0dp"
             android:clipToOutline="false"
             android:paddingHorizontal="10dp"
-            android:layout_height="55dp"
+            android:layout_height="100dp"
             app:strokeWidth="5dp"
             app:strokeColor="@color/white"
             app:gradientStartColor="#FFAA80"
@@ -133,7 +133,7 @@
         <com.xylophone.learning.music.core.custom.text.StrokeGradientTextView
             android:id="@+id/tv2"
             android:layout_width="0dp"
-            android:layout_height="55dp"
+            android:layout_height="100dp"
             android:fontFamily="@font/sigmar_regular"
             android:text="@string/my_record"
             android:textSize="40sp"

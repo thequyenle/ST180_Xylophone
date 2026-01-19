@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.xylophone.learning.music.R
 import com.xylophone.learning.music.core.base.BaseActivity
 import com.xylophone.learning.music.core.custom.text.DoubleStrokeTextView
@@ -33,7 +34,7 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
 
     private lateinit var recordingAdapter: RecordingAdapter
 
-    private var currentFilter: Song.Difficulty? = null
+    private lateinit var preferenceHelper: com.xylophone.learning.music.core.helper.SharePreferenceHelper
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
        // Toast.makeText(this, "SongListActivity onCreate called", Toast.LENGTH_SHORT).show()
@@ -43,6 +44,17 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
     override fun onResume() {
         super.onResume()
         //Toast.makeText(this, "SongListActivity onResume", Toast.LENGTH_SHORT).show()
+
+        // Check nếu có flag clear_focus (từ Home/normal mode) → clear
+        val shouldClearFocus = intent.getBooleanExtra("clear_focus", false)
+        if (shouldClearFocus) {
+            preferenceHelper.clearLastPlayedSongId()
+            // Remove flag để lần sau không clear nữa
+            intent.removeExtra("clear_focus")
+        }
+
+        // Focus lại song đã chơi gần đây (nếu chưa bị clear)
+        focusLastPlayedSong()
     }
 
     override fun onPause() {
@@ -62,6 +74,9 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
     override fun initView() {
        // Toast.makeText(this, "SongListActivity starting", Toast.LENGTH_SHORT).show()
         try {
+            // Initialize preference helper
+            preferenceHelper = com.xylophone.learning.music.core.helper.SharePreferenceHelper(this)
+
             setupRecyclerView()
             loadSongs()
             setupFilters()
@@ -125,19 +140,13 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
 
     }
 
-    private fun loadSongs(difficulty: Song.Difficulty? = null) {
-        val songs = if (difficulty == null) {
-            SongLibrary.getallSongs()
-        } else {
-            SongLibrary.getSongsByDifficulty(difficulty)
-        }
+    private fun loadSongs() {
+        val songs = SongLibrary.getallSongs()
 
         if (songs.isEmpty()) {
-
             binding.recyclerViewSongs.isVisible = false
         } else {
             binding.layoutNoItem.gone()
-
             binding.recyclerViewSongs.isVisible = true
             songAdapter.updateSongs(songs)
         }
@@ -163,15 +172,6 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
 
         }
         selecTab(true)
-    }
-
-    private fun updateFilterUI() {
-        binding.apply {
-            // Reset all filters
-
-            // Highlight selected filter
-
-        }
     }
 
     override fun viewListener() {
@@ -286,6 +286,24 @@ class SongListActivity : BaseActivity<ActivitySongListBinding>() {
             btnActionBarRightText.gone()
             btnActionBarRight.setImageResource(R.drawable.ic_save)
 
+        }
+    }
+
+    // Focus lại song đã chơi gần đây
+    private fun focusLastPlayedSong() {
+        // Chỉ focus khi đang hiển thị song list (không phải recording list)
+        if (binding.recyclerViewSongs.adapter != songAdapter) return
+
+        val lastPlayedSongId = preferenceHelper.getLastPlayedSongId() ?: return
+
+        // Select song trong adapter
+        val position = songAdapter.selectSongById(lastPlayedSongId)
+
+        // Scroll tới vị trí đó
+        if (position != RecyclerView.NO_POSITION) {
+            binding.recyclerViewSongs.post {
+                binding.recyclerViewSongs.smoothScrollToPosition(position)
+            }
         }
     }
 }

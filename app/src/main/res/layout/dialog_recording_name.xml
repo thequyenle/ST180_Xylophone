@@ -24,6 +24,7 @@
             <!--    tvTitle - Dialog title -->
             <TextView
                 android:id="@+id/tvTitle"
+                style="@style/single_marquee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/chewy_regular"

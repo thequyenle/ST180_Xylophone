@@ -6,6 +6,7 @@ import com.xylophone.learning.music.R
 import com.xylophone.learning.music.core.base.BaseDialog
 import com.xylophone.learning.music.core.extensions.gone
 import com.xylophone.learning.music.core.extensions.hideNavigation
+import com.xylophone.learning.music.core.extensions.select
 import com.xylophone.learning.music.core.extensions.setOnSingleClick
 import com.xylophone.learning.music.core.extensions.strings
 import com.xylophone.learning.music.data.model.Instrument
@@ -35,6 +36,7 @@ class RecordingNameDialog(
         setupRecordingInfo()
         setupButtons()
         setupEditText()
+        binding.tvTitle.select()
         context.hideNavigation()
     }
 

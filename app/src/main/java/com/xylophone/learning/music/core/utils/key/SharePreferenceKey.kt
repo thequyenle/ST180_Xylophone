@@ -8,4 +8,5 @@ object SharePreferenceKey {
     const val RATE_KEY = "rate"
     const val COUNT_BACK_KEY = "back_count"
     const val INSTRUMENT_KEY = "selected_instrument"
+    const val LAST_PLAYED_SONG_KEY = "last_played_song_id"
 }

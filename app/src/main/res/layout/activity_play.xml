@@ -156,13 +156,15 @@
         
         <TextView
             android:id="@+id/idMusic"
-            android:paddingStart="15dp"
-            android:layout_width="wrap_content"
+            android:paddingStart="0dp"
+            android:layout_width="55dp"
+            android:gravity="center"
+            style="@style/single_marquee"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:text="@string/music"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
             android:visibility="visible"
             android:layout_marginBottom="2dp"
             android:fontFamily="@font/chewy_regular"

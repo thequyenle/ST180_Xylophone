@@ -130,4 +130,21 @@ class SharePreferenceHelper(val context: Context) {
         editor.putString(SharePreferenceKey.INSTRUMENT_KEY, instrument)
         editor.apply()
     }
+
+    // Last Played Song
+    fun getLastPlayedSongId(): String? {
+        return preferences.getString(SharePreferenceKey.LAST_PLAYED_SONG_KEY, null)
+    }
+
+    fun setLastPlayedSongId(songId: String) {
+        val editor = preferences.edit()
+        editor.putString(SharePreferenceKey.LAST_PLAYED_SONG_KEY, songId)
+        editor.apply()
+    }
+
+    fun clearLastPlayedSongId() {
+        val editor = preferences.edit()
+        editor.remove(SharePreferenceKey.LAST_PLAYED_SONG_KEY)
+        editor.apply()
+    }
 }
