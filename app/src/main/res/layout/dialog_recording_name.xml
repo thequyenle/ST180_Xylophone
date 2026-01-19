@@ -26,10 +26,11 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_bold"
+                android:fontFamily="@font/chewy_regular"
                 android:gravity="center"
                 android:layout_marginTop="14dp"
-                android:text="Save Recording"
+                android:layout_marginHorizontal="60dp"
+                android:text="@string/name_the_recording"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
@@ -44,7 +45,7 @@
                 android:gravity="center"
                 android:layout_marginHorizontal="12dp"
                 android:background="@drawable/bg_edt"
-                android:hint="Enter recording name"
+                android:hint="@string/enter_recording_name"
                 android:textColorHint="#808080"
                 android:imeOptions="actionDone"
                 android:inputType="text"

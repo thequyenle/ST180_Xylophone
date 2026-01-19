@@ -123,4 +123,6 @@
     <string name="success_title">Amazing, you played this song very well !</string>
     <string name="play_again">Play again</string>
     <string name="please_enter_name">Please enter a name</string>
+    <string name="name_the_recording">Name the recording</string>
+    <string name="enter_recording_name">Enter recording name</string>
 </resources>

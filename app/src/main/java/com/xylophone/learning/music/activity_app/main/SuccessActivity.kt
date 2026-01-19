@@ -59,6 +59,9 @@ class SuccessActivity : BaseActivity<ActivitySuccessBinding>() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        handleBackLeftToRight()
+        val intent = Intent(this@SuccessActivity, PlayActivity::class.java)
+        startActivity(intent)
+        finish()
+
     }
 }

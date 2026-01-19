@@ -72,4 +72,6 @@
     <string name="success_title">Großartig, du hast dieses Lied sehr gut gespielt!</string>
     <string name="play_again">Erneut abspielen</string>
     <string name="please_enter_name">Bitte gib einen Namen ein</string>
+    <string name="name_the_recording">Name the recording</string>
+    <string name="enter_recording_name">Enter recording name</string>
 </resources>

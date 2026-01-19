@@ -20,6 +20,7 @@ import com.xylophone.learning.music.core.extensions.goHome
 import com.xylophone.learning.music.core.extensions.gone
 import com.xylophone.learning.music.core.extensions.handleBackLeftToRight
 import com.xylophone.learning.music.core.extensions.invisible
+import com.xylophone.learning.music.core.extensions.select
 import com.xylophone.learning.music.core.extensions.setOnSingleClick
 import com.xylophone.learning.music.core.extensions.shakeViewEffect
 import com.xylophone.learning.music.core.extensions.visible
@@ -87,15 +88,15 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         // Initialize preference helper
         preferenceHelper = SharePreferenceHelper(this)
 
-        // Load saved instrument
-        val savedInstrument = preferenceHelper.getSelectedInstrument()
-        currentInstrument = Instrument.fromName(savedInstrument)
 
         if(!isLearningMode&&!isPlaybackMode)
         {
             binding.idMusic.setText(R.string.music)
         }
         binding.btnHome.setOnSingleClick { goHome() }
+
+        binding.tvRecord.select()
+
         // Setup instrument selectors
         setupInstrumentSelectors()
         updateInstrumentUI()
@@ -128,7 +129,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
                 }
             }
         }
-    }
+    }// tôi rất ngạc nhiên vì bạn tìm một tính năng gì đó đều rất nhanh, không biết bạn có bị quyết gì không vậy, chỉ cho tôi, để tôi có thể tìm nhanh như bạn
 
     private fun jumpSunToButton(targetButton: ImageView) {
         val sun = binding.imgSunGuide
@@ -323,17 +324,21 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         // Nếu tìm thấy button và button khác với button trước đó
         if (foundButton != null && foundSoundId != null) {
             if (lastPlayedButtonMap[pointerId] != foundButton) {
+                var shouldShowIcon = true
+
                 // Learning Mode: validate correct note
                 if (isLearningMode) {
-                    handleLearningModeTouch(foundButton!!)
+                    shouldShowIcon = handleLearningModeTouch(foundButton!!)
                 } else {
                     // Normal Mode: chỉ phát khi chuyển sang button mới
                     playNoteSound(foundSoundId!!)
                     animateButton(foundButton!!)
                 }
 
-                // Show note icon overlay
-                noteIconManager.showIcon(pointerId, foundButton!!)
+                // Show note icon overlay only if correct note (or not in learning mode)
+                if (shouldShowIcon) {
+                    noteIconManager.showIcon(pointerId, foundButton!!)
+                }
 
                 lastPlayedButtonMap[pointerId] = foundButton
             }
@@ -434,7 +439,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         }
     }
 
-    // Bắt đầu recording
+    // Bắt đầu recording tôi muốn lần đầu vào play thì focus xy
     private fun startRecording() {
         // Pass instrument hiện tại vào RecordingManager
         RecordingManager.startRecording(currentInstrument.name)
@@ -541,14 +546,14 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         dialog.onSaveClick = { name ->
             // Lưu recording với tên user đã nhập
             RecordingManager.savePendingRecording(this, name)
-           // Toast.makeText(this, "Saved: $name", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Saved: $name", Toast.LENGTH_SHORT).show()
         }
 
         // Callback khi user bấm Cancel
         dialog.onCancelClick = {
             // Discard recording (không lưu)
             RecordingManager.discardPendingRecording()
-          //  Toast.makeText(this, "Recording discarded", Toast.LENGTH_SHORT).show()
+          Toast.makeText(this, "Recording discarded", Toast.LENGTH_SHORT).show()
         }
 
         dialog.show()
@@ -702,37 +707,38 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     // Xử lý touch event trong learning mode
-    private fun handleLearningModeTouch(clickedButton: ImageView) {
-        val song = currentSong ?: return
+    // Phát âm thanh với mọi nốt, nhưng chỉ chuyển tiếp khi bấm đúng
+    // Return true để luôn hiển thị icon
+    private fun handleLearningModeTouch(clickedButton: ImageView): Boolean {
+        val song = currentSong ?: return false
 
         // Check bounds để tránh crash
         if (currentNoteIndex >= song.notes.size) {
             isLearningComplete = true
-            return // Bài hát đã hoàn thành, ignore click
+            return false // Bài hát đã hoàn thành, ignore click
         }
 
+        // Luôn phát âm thanh của nốt được bấm (dù đúng hay sai)
+        val soundId = buttonSoundMap[clickedButton]
+        soundId?.let { playNoteSound(it) }
+
+        // Luôn animation (dù đúng hay sai)
+        clickedButton.animateScaleEffect(0.8f, 150)
+        animateButton(clickedButton)
+
+        // Kiểm tra có đúng nốt không
         val clickedNoteName = buttonNameMap[clickedButton]
         val correctNoteName = song.notes[currentNoteIndex]
 
         if (clickedNoteName == correctNoteName) {
-            // ✅ ĐÚNG
-            val soundId = buttonSoundMap[clickedButton]
-            soundId?.let { playNoteSound(it) }
-
-            // Success animation
-            clickedButton.animateScaleEffect(0.8f, 150)
-            animateButton(clickedButton)
-
-            // Move to next note
+            // ✅ ĐÚNG - Move to next note (sun sẽ nhảy)
             Handler(Looper.getMainLooper()).postDelayed({
                 moveToNextNote()
             }, 300)
         }
-        else {
-            // ❌ SAI - Shake animation và không phát âm
-            clickedButton.shakeViewEffect(duration = 50, repeatCount = 3, shakeDistance = 10f)
-            // Có thể thêm sound effect "wrong" ở đây nếu muốn
-        }
+        // ❌ SAI - Không làm gì, giữ nguyên highlight nốt hiện tại
+
+        return true // Luôn hiển thị icon (dù đúng hay sai)
     }
 
     // Highlight nốt hiện tại
@@ -914,9 +920,24 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     }
 
     override fun onDestroy() {
+        // Stop recording nếu đang recording (tránh memory leak)
+        if (RecordingManager.isRecording()) {
+            RecordingManager.stopRecording()
+            RecordingManager.discardPendingRecording() // Hủy recording chưa lưu
+            stopTimer() // Stop timer
+        }
+
+        // Stop timer nếu đang chạy
+        stopTimer()
+
         // Hủy tất cả pending runnables để tránh crash khi Activity bị destroy
         playbackRunnables.forEach { playbackHandler.removeCallbacks(it) }
         playbackRunnables.clear()
+
+        // Cancel sun animation
+        sunJumpAnimator?.cancel()
+        sunJumpAnimator = null
+
         super.onDestroy()
         // SoundHelper sẽ được release khi app đóng
     }
