@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="1dp">
 
     <androidx.cardview.widget.CardView
@@ -56,8 +57,8 @@
                 android:gravity="start"
                 android:textColor="@color/white"
                 android:textSize="20sp"
+                tools:text="@string/My_NickName"
                 app:layout_constraintBottom_toBottomOf="@+id/imvFlag"
-                app:layout_constraintEnd_toStartOf="@+id/btnRadio"
                 app:layout_constraintStart_toEndOf="@+id/imvFlag"
                 app:layout_constraintTop_toTopOf="@+id/imvFlag" />
 
