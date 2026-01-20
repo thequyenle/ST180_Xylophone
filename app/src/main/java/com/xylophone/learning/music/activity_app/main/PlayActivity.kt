@@ -382,10 +382,35 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
             }
             // Nếu cùng button → không phát lại (giữ nguyên)
         } else {
+
+
+            // Thay vì reset ngay -> kiểm tra xem có "ra xa hẳn" khỏi phím cuối cùng chưa
+            val lastButton = lastPlayedButtonMap[pointerId]
+
+            if (lastButton != null) {
+                val location = IntArray(2)
+                lastButton.getLocationOnScreen(location)
+                val bx = location[0]
+                val by = location[1]
+                val bw = lastButton.width
+                val bh = lastButton.height
+
+                // "Vùng an toàn" quanh phím, ví dụ 16dp
+                val extra = 16 * resources.displayMetrics.density
+
+                val stillNear =
+                    x >= bx - extra && x <= bx + bw + extra &&
+                            y >= by - extra && y <= by + bh + extra
+
+                // Chỉ khi thật sự ra xa khỏi vùng này mới reset
+                if (!stillNear) {
+                    lastPlayedButtonMap[pointerId] = null
+                }
+            }
             // FIX: Nếu swipe ra ngoài (không chạm button nào), reset tracking
             // Điều này cho phép user swipe lại vào button cũ và vẫn phát âm
 
-            lastPlayedButtonMap[pointerId] = null
+           // lastPlayedButtonMap[pointerId] = null
         }
     }
 
@@ -804,7 +829,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     // Xử lý touch event trong learning mode
     // Phát âm thanh với mọi nốt, nhưng chỉ chuyển tiếp khi bấm đúng
     // Return true để luôn hiển thị icon
-    private fun handleLearningModeTouch(clickedButton: ImageView): Boolean {R
+    private fun handleLearningModeTouch(clickedButton: ImageView): Boolean {
         val song = currentSong ?: return false
 
         // Check bounds để tránh crash

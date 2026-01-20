@@ -23,12 +23,17 @@ abstract class BaseDialog<VB : ViewBinding>(
     abstract val isCancelOnTouchOutside: Boolean
     abstract val isCancelableByBack: Boolean
 
+    // Wrapped context với locale đúng để sử dụng cho getString()
+    protected val localizedContext: Context by lazy {
+        LanguageHelper.wrapContext(context)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LanguageHelper.setLocale(context)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
 
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), layoutId, null, false)
+        // Sử dụng localizedContext để inflate layout với locale đúng
+        binding = DataBindingUtil.inflate(LayoutInflater.from(localizedContext), layoutId, null, false)
         setContentView(binding.root)
 
         setCancelable(isCancelableByBack)

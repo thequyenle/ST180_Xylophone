@@ -131,4 +131,5 @@
     <string name="enter_recording_name">Enter recording name</string>
     <string name="the_recording_was_not_saved">The recording was not saved!</string>
     <string name="cannot_switch_instrument_while_recording">Cannot switch instrument while recording!</string>
+    <string name="no_record_here">No record here</string>
 </resources>

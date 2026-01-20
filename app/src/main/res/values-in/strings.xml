@@ -133,4 +133,5 @@
     <string name="enter_recording_name">Masukkan nama rekaman</string>
     <string name="the_recording_was_not_saved">Rekaman tidak tersimpan!</string>
     <string name="cannot_switch_instrument_while_recording">Tidak dapat mengganti instrumen saat merekam!</string>
+    <string name="no_record_here">Tidak ada catatan di sini</string>
 </resources>

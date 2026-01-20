@@ -29,7 +29,7 @@ class RateDialog(context: Activity) : BaseDialog<DialogRateBinding>(context, Gra
         binding.btnVote.setOnClickListener {
             when (i) {
                 0 -> {
-                    Toast.makeText(context, context.getText(R.string.rate_us_0), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, localizedContext.getText(R.string.rate_us_0), Toast.LENGTH_SHORT).show()
                 }
 
                 in 1..3 -> {
@@ -77,8 +77,8 @@ class RateDialog(context: Activity) : BaseDialog<DialogRateBinding>(context, Gra
     }
 
     fun setView(tv1: Int, tv2: Int, img: Int) {
-        binding.tv1.text = context.strings(tv1)
-        binding.tv2.text = context.strings(tv2)
+        binding.tv1.text = localizedContext.strings(tv1)
+        binding.tv2.text = localizedContext.strings(tv2)
         binding.imvAvtRate.setImageResource(img)
     }
 }

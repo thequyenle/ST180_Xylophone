@@ -1,6 +1,7 @@
 package com.xylophone.learning.music.core.base
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
@@ -43,9 +44,12 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
         SharePreferenceHelper(this)
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageHelper.wrapContext(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LanguageHelper.setLocale(this)
         _binding = setViewBinding()
         setContentView(binding.root)
         setUpUI()
@@ -77,7 +81,6 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
     suspend fun showLoading() {
         withContext(Dispatchers.Main) {
             if (loadingDialog.isShowing.not()) {
-                LanguageHelper.setLocale(this@BaseActivity)
                 loadingDialog.show()
             }
         }

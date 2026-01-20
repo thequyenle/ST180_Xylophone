@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.xylophone.learning.music.R
+import com.xylophone.learning.music.core.extensions.select
 import com.xylophone.learning.music.databinding.ItemRecordingBinding
 import com.xylophone.learning.music.data.model.Recording
 
@@ -25,7 +26,7 @@ class RecordingAdapter(
         fun bind(recording: Recording, isSelected: Boolean) {
             binding.apply {
                 tvRecordingName.text = recording.name
-
+                tvRecordingName.select()
                 root.setBackgroundResource(
                     if(isSelected) R.drawable.bg_btn_selected_recording
                     else R.drawable.bg_btn_unselected_recording

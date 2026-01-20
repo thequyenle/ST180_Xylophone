@@ -50,8 +50,8 @@ class YesNoDialog(
 
     private fun initText() {
         binding.apply {
-            tvTitle.text = context.getString(title)
-            tvDescription.text = context.getString(description)
+            tvTitle.text = localizedContext.getString(title)
+            tvDescription.text = localizedContext.getString(description)
         }
     }
 
@@ -59,8 +59,8 @@ class YesNoDialog(
         binding.flBottom.apply {
 
 
-            tvBottomLeft.text = context.strings(R.string.no)
-            tvBottomRight.text = context.strings(R.string.yes)
+            tvBottomLeft.text = localizedContext.strings(R.string.no)
+            tvBottomRight.text = localizedContext.strings(R.string.yes)
         }
     }
 }

@@ -131,4 +131,5 @@
     <string name="enter_recording_name">Namen der Aufnahme eingeben</string>
     <string name="the_recording_was_not_saved">Die Aufnahme wurde nicht gespeichert!</string>
     <string name="cannot_switch_instrument_while_recording">Instrument kann während der Aufnahme nicht gewechselt werden!</string>
+    <string name="no_record_here">Keine Einträge hier</string>
 </resources>

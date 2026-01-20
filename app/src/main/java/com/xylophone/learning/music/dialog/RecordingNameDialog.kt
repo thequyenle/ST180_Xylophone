@@ -59,8 +59,8 @@ class RecordingNameDialog(
             // Ẩn icons, chỉ hiển thị text
 
             // Set text cho buttons
-            tvBottomLeft.text = context.strings(R.string.cancel)
-            tvBottomRight.text = context.strings(R.string.save)
+            tvBottomLeft.text = localizedContext.strings(R.string.cancel)
+            tvBottomRight.text = localizedContext.strings(R.string.save)
             tvBottomRight.select()
             tvBottomLeft.select()
         }
@@ -136,7 +136,7 @@ class RecordingNameDialog(
 //                startAnimation(shake)
 
                 // Show error hint
-                error = context.strings(R.string.please_enter_name)
+                error = localizedContext.strings(R.string.please_enter_name)
                 requestFocus()
             }
             return
@@ -154,7 +154,7 @@ class RecordingNameDialog(
 //                startAnimation(shake)
 
                 // Show error hint
-                error = context.strings(R.string.name_already_exists)
+                error = localizedContext.strings(R.string.name_already_exists)
                 requestFocus()
             }
             return
