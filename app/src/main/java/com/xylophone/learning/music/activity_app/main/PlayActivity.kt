@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.animation.AnimationUtils
@@ -803,7 +804,7 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     // Xử lý touch event trong learning mode
     // Phát âm thanh với mọi nốt, nhưng chỉ chuyển tiếp khi bấm đúng
     // Return true để luôn hiển thị icon
-    private fun handleLearningModeTouch(clickedButton: ImageView): Boolean {
+    private fun handleLearningModeTouch(clickedButton: ImageView): Boolean {R
         val song = currentSong ?: return false
 
         // Check bounds để tránh crash
@@ -816,17 +817,22 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
         val soundId = buttonSoundMap[clickedButton]
         soundId?.let { playNoteSound(it) }
 
-        // Luôn animation (dù đúng hay sai)
-        clickedButton.animateScaleEffect(0.8f, 150)
-        animateButton(clickedButton)
-
         // Kiểm tra có đúng nốt không
         val clickedNoteName = buttonNameMap[clickedButton]
         val correctNoteName = song.notes[currentNoteIndex]
 
         if (clickedNoteName == correctNoteName) {
+
+            // Dừng mọi animation nhấn để không “đánh nhau” với highlightCurrentNote
+            clickedButton.clearAnimation()
+            clickedButton.animate().cancel()
             // ✅ ĐÚNG - Move to next note ngay lập tức (không delay)
             moveToNextNote()
+        }
+        else{
+            // ❌ SAI – chỉ lúc sai mới dùng hiệu ứng chạm
+            clickedButton.animateScaleEffect(0.8f, 150)
+            animateButton(clickedButton)
         }
         // ❌ SAI - Không làm gì, giữ nguyên highlight nốt hiện tại
 
@@ -849,6 +855,9 @@ class PlayActivity : BaseActivity<ActivityPlayBinding>() {
     private fun highlightCurrentNote() {
         val song = currentSong ?: return
         if (currentNoteIndex >= song.notes.size) return
+
+        Log.d("LEARN", "Highlight note index=$currentNoteIndex, name=${song.notes[currentNoteIndex]}")
+
 
         // Tìm button cần highlight
         val correctNoteName = song.notes[currentNoteIndex]
